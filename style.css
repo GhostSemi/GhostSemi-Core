@@ -1,0 +1,53 @@
+:root {
+    --bg-dark: #08080a;
+    --card-bg: #121216;
+    --ghost-blue: #00d4ff;
+    --ghost-glow: rgba(0, 212, 255, 0.3);
+    --text-main: #e0e0e0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.highlight { color: var(--ghost-blue); text-shadow: 0 0 10px var(--ghost-glow); }
+
+/* Header & Hero */
+header { padding: 60px 20px; text-align: center; border-bottom: 1px solid #222; }
+.logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; }
+h1 { font-size: 3rem; margin: 20px 0; font-weight: 900; }
+
+/* Live Benchmark */
+.live-bench { background: #000; padding: 40px 20px; text-align: center; }
+.chart-container { max-width: 600px; margin: 0 auto; text-align: left; }
+.label { font-size: 0.8rem; margin-top: 15px; color: #888; text-transform: uppercase; }
+.bar-bg { background: #1a1a1a; border-radius: 5px; margin: 5px 0; overflow: hidden; }
+.bar { height: 35px; line-height: 35px; padding-left: 15px; background: #444; color: #000; font-weight: bold; transition: 0.5s ease; width: 58%; }
+.ghost { background: var(--ghost-blue); box-shadow: 0 0 15px var(--ghost-glow); }
+
+/* Pricing */
+.pricing { display: flex; justify-content: center; align-items: center; gap: 30px; padding: 80px 20px; flex-wrap: wrap; }
+.price-card { background: var(--card-bg); border: 1px solid #222; padding: 40px; border-radius: 20px; width: 300px; position: relative; }
+.price-card.pro { border: 2px solid var(--ghost-blue); transform: scale(1.05); }
+.badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--ghost-blue); color: #000; padding: 5px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+
+.amount { font-size: 3rem; font-weight: bold; margin: 20px 0; }
+.amount span { font-size: 1rem; color: #666; }
+
+ul { list-style: none; padding: 0; margin-bottom: 30px; }
+ul li { padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.9rem; }
+
+/* Buttons */
+button { width: 100%; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; border: none; }
+.btn-primary { background: var(--ghost-blue); color: #000; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 5px 15px var(--ghost-glow); }
+.btn-secondary { background: transparent; border: 1px solid #444; color: white; }
+
+footer { padding: 40px; font-size: 0.8rem; color: #444; border-top: 1px solid #222; text-align: center; }
+.waitlist { padding: 60px 20px; background: linear-gradient(180deg, #08080a 0%, #121216 100%); text-align: center; }
+.input-group { display: flex; justify-content: center; gap: 10px; margin-top: 20px; max-width: 500px; margin-left: auto; margin-right: auto; }
+input[type="email"] { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 10px; color: white; width: 60%; }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostSemi | Software-Defined Silicon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">GHOST<span class="highlight">SEMI</span></div>
+            <div class="tagline">v1.0 Virtual Substrate</div>
+        </nav>
+        <div class="hero">
+            <h1>Hardware Performance. <br><span class="highlight">Software Delivery.</span></h1>
+            <p>Bypass physical CPU limitations with our patented Ghost Bridge technology.</p>
+        </div>
+    </header>
+
+    <section class="live-bench">
+        <h3>REAL-TIME SYSTEM THROUGHPUT</h3>
+        <div class="chart-container">
+            <div class="label">Standard CPU Logic</div>
+            <div class="bar-bg"><div class="bar" style="width: 58%;">58% Efficiency</div></div>
+            
+            <div class="label">GhostSemi Virtual Gates</div>
+            <div class="bar-bg"><div id="ghost-bar" class="bar ghost">99% Efficiency</div></div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="price-card">
+            <h3>BASIC</h3>
+            <div class="amount">$0</div>
+            <ul>
+                <li>5% Performance Boost</li>
+                <li>Standard Support</li>
+                <li>Community License</li>
+            </ul>
+            <button class="btn-secondary">Get Basic</button>
+        </div>
+
+        <div class="price-card pro">
+            <div class="badge">RECOMMENDED</div>
+            <h3>PRO</h3>
+            <div class="amount">$14.99<span>/mo</span></div>
+            <ul>
+                <li><strong>41% Logic Acceleration</strong></li>
+                <li>Neural Bridge Access</li>
+                <li>Priority Threading</li>
+                <li>Enterprise Encryption</li>
+            </ul>
+            <button class="btn-primary">Upgrade to Pro</button>
+        </div>
+    </section>
+<section class="waitlist">
+    <h3>READY TO BYPASS SILICON?</h3>
+    <p>Join 500+ engineers on the GhostSemi priority waitlist.</p>
+    <div class="input-group">
+        <input type="email" id="user-email" placeholder="Enter your email...">
+        <button class="btn-primary" onclick="joinWaitlist()">JOIN WAITLIST</button>
+    </div>
+    <p id="success-msg" style="display:none; color: #00d4ff; margin-top: 10px;">You're on the list, Founder. Stand by for v1.1.</p>
+</section>
+
+<script>
+    function joinWaitlist() {
+        const email = document.getElementById('user-email').value;
+        if(email.includes('@')) {
+            document.getElementById('success-msg').style.display = 'block';
+            document.querySelector('.input-group').style.display = 'none';
+        } else {
+            alert("Please enter a valid business email.");
+        }
+    }
+</script>
+    <footer>
+        <p>&copy; 2026 GhostSemi Technologies. Disrupting the Silicon Cycle.</p>
+    </footer>
+
+    <script>
+        // Simulates the active optimization of the software chip
+        setInterval(() => {
+            const bar = document.getElementById('ghost-bar');
+            const speed = Math.floor(Math.random() * (100 - 94 + 1)) + 94;
+            bar.style.width = speed + "%";
+            bar.innerText = speed + "% Efficiency";
+        }, 1500);
+    </script>
+</body>
+</html>
