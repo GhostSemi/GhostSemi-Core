@@ -1,0 +1,8 @@
+# Ignore the compiled engine and telemetry
+GhostAI.exe
+stats.ghost
+dist/
+build/
+__pycache__/
+.venv/
+.vscode/
