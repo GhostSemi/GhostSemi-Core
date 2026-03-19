@@ -1,90 +1,58 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
-#include <chrono>
 #include <thread>
+#include <chrono>
 
 using namespace std;
 
-/**
- * GHOSTSEMI VIRTUAL SILICON ENGINE - Version 1.3
- * Features: Secure Handshake, Batch Processing, Performance Telemetry
- */
-
-// Function to simulate high-performance silicon task
-void runTask(int taskID, bool isPro) {
-    cout << "\n[TASK " << taskID << "] Initializing Substrate..." << endl;
-    
-    // Pro users get 4x faster processing speed (100ms vs 400ms per step)
-    int delay = isPro ? 100 : 400; 
-
-    for(int i = 0; i <= 100; i += 25) {
-        this_thread::sleep_for(chrono::milliseconds(delay));
-        cout << "  > Progress: " << i << "% " << (isPro ? "[TURBO ACTIVE]" : "[LOCKED]") << endl;
+void run_task(int id, double speed) {
+    cout << "[TASK " << id << "] Initializing Substrate..." << endl;
+    for(int i=0; i<=100; i+=25) {
+        this_thread::sleep_for(chrono::milliseconds((int)(500 / speed)));
+        cout << "  > Progress: " << i << "%" << (speed > 2.0 ? " [TURBO]" : " [LOCKED]") << endl;
     }
-    cout << "[TASK " << taskID << "] SUCCESS: Computation Verified." << endl;
 }
 
 int main() {
-    cout << "============================================" << endl;
-    cout << "   GHOSTSEMI VIRTUAL SILICON ENGINE v1.3    " << endl;
-    cout << "      Architecture: Software-Defined        " << endl;
-    cout << "============================================" << endl;
-    
-    // --- ADVANCED LICENSE CHECK (The Handshake) ---
-    ifstream licenseFile("pro_mode.txt");
-    string keyContent;
-    bool isPro = false;
+    ifstream license("pro_mode.txt");
+    string key;
+    bool is_pro = false;
 
-    if (licenseFile.is_open()) {
-        getline(licenseFile, keyContent);
-        
-        // This MUST match the secure_key in your dashboard.py exactly
-        if (keyContent == "GHOST_SECURE_5592_X") {
-            isPro = true;
-        }
-        licenseFile.close();
+    if (license.is_open()) {
+        getline(license, key);
+        if (key == "GHOST_SECURE_5592_X") is_pro = true;
     }
 
-    // --- BATCH CONFIGURATION ---
-    // Pro users process 5 tasks in a row. Evaluation users only get 1.
-    int totalTasks = isPro ? 5 : 1; 
+    cout << "============================================" << endl;
+    cout << "   GHOSTSEMI VIRTUAL SILICON ENGINE v1.5" << endl;
+    cout << "      Architecture: Software-Defined  " << endl;
+    cout << "============================================" << endl;
 
-    if (isPro) {
+    auto start = chrono::high_resolution_clock::now();
+
+    if (is_pro) {
         cout << ">> STATUS: PRO LICENSE VERIFIED" << endl;
-        cout << ">> MODE: BATCH PROCESSING (5 TASKS QUEUED)" << endl;
+        cout << ">> MODE: BATCH PROCESSING (5 TASKS)" << endl;
+        for(int i=1; i<=5; i++) run_task(i, 4.2);
     } else {
         cout << ">> STATUS: EVALUATION MODE (LOCKED)" << endl;
-        cout << ">> MODE: SINGLE TASK ONLY" << endl;
         cout << ">> ALERT: Visit your dashboard to unlock Turbo." << endl;
+        run_task(1, 1.8);
     }
 
-    // --- EXECUTION TIMER START ---
-    auto startTime = chrono::high_resolution_clock::now();
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = end - start;
 
-    for(int t = 1; t <= totalTasks; t++) {
-        runTask(t, isPro);
-    }
-
-    auto endTime = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = endTime - startTime;
-
-    // --- TELEMETRY LOGGING (Option A) ---
+    // Telemetry Logging
     ofstream stats("stats.ghost");
-    if (stats.is_open()) {
-        stats << "--- GHOSTSEMI PERFORMANCE REPORT ---\n";
-        stats << "ENGINE_VERSION: 1.3\n";
-        stats << "LICENSE: " << (isPro ? "PRO_TURBO" : "EVAL_LIMITED") << "\n";
-        stats << "TASKS_COMPLETED: " << totalTasks << "\n";
-        stats << "TOTAL_EXECUTION_TIME: " << elapsed.count() << "s\n";
-        stats << "AVERAGE_TASK_SPEED: " << (elapsed.count() / totalTasks) << "s\n";
-        stats << "STATUS: ALL_SYSTEMS_OPTIMAL\n";
-        stats.close();
-        cout << "\n[LOG] Performance stats saved to 'stats.ghost'" << endl;
-    }
+    stats << "--- GHOSTSEMI PERFORMANCE REPORT ---" << endl;
+    stats << "ENGINE_VERSION: 1.5" << endl;
+    stats << "LICENSE: " << (is_pro ? "PRO_TURBO" : "EVAL_LOCKED") << endl;
+    stats << "TASKS_COMPLETED: " << (is_pro ? 5 : 1) << endl;
+    stats << "TOTAL_EXECUTION_TIME: " << elapsed.count() << "s" << endl;
+    stats.close();
 
-    cout << "============================================" << endl;
     cout << "TOTAL TIME: " << elapsed.count() << " seconds" << endl;
     cout << "GHOSTSEMI CORE SHUTDOWN COMPLETE." << endl;
     cout << "============================================" << endl;
