@@ -1,17 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>GhostSemi | Access Granted</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostSemi | Alpha Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
-        body { background: #0a0a0c; color: #00d4ff; font-family: sans-serif; text-align: center; padding-top: 100px; }
-        .key { font-size: 24px; color: white; border: 1px solid #333; padding: 20px; display: inline-block; margin-top: 20px; }
+        :root { --neon: #00d4ff; --dark: #050507; --panel: #111114; }
+        body { background-color: var(--dark); color: white; font-family: 'Roboto Mono', monospace; margin: 0; padding: 40px; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; background: var(--panel); border: 1px solid #222; padding: 40px; border-radius: 15px; box-shadow: 0 0 50px rgba(0, 212, 255, 0.1); }
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; }
+        .key-box { background: #000; border: 2px dashed var(--neon); padding: 20px; font-size: 1.5rem; color: white; margin: 20px 0; display: inline-block; }
+        .download-zone { margin-top: 40px; padding: 30px; border-top: 1px solid #333; }
+        .dl-button { background: white; color: black; padding: 15px 40px; text-decoration: none; font-weight: bold; font-family: 'Orbitron', sans-serif; display: inline-block; transition: 0.3s; }
+        .dl-button:hover { background: var(--neon); transform: translateY(-3px); }
+        .steps { text-align: left; display: inline-block; color: #888; margin-top: 20px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <h1>PROVISIONING SUCCESSFUL</h1>
-    <p>Your Alpha credentials have been generated.</p>
-    <div class="key">PRO KEY: GHOST-PRO-2026</div>
-    <br><br>
-    <a href="index.html" style="color: #555;">Return to Core</a>
+
+    <div class="container">
+        <h1>PROVISIONING COMPLETE</h1>
+        <p>Your node is now active in the GhostSemi Alpha network.</p>
+        
+        <div class="key-box">
+            ALPHA KEY: <span style="color: var(--neon);">GHOST-PRO-2026</span>
+        </div>
+
+        <div class="download-zone">
+            <h3>CORE ASSETS</h3>
+            <p>Download the v1.5 stable binaries to begin execution.</p>
+            <a href="https://github.com/GhostSemi/GhostSemi-Core/releases" class="dl-button">DOWNLOAD BINARIES (.EXE)</a>
+            <br>
+            <div class="steps">
+                <p>1. Extract the ZIP folder to your desktop.</p>
+                <p>2. Run <strong>dashboard.exe</strong> and enter your Alpha Key.</p>
+                <p>3. Initialize <strong>GhostAI.exe</strong> to start silicon simulation.</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
