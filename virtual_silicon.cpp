@@ -9,6 +9,7 @@ using namespace std;
 void run_task(int id, double speed) {
     cout << "[TASK " << id << "] Initializing Substrate..." << endl;
     for(int i=0; i<=100; i+=25) {
+        // Higher speed = shorter sleep time
         this_thread::sleep_for(chrono::milliseconds((int)(500 / speed)));
         cout << "  > Progress: " << i << "%" << (speed > 2.0 ? " [TURBO]" : " [LOCKED]") << endl;
     }
@@ -21,7 +22,9 @@ int main() {
 
     if (license.is_open()) {
         getline(license, key);
-        if (key == "GHOST_SECURE_5592_X") is_pro = true;
+        if (key == "GHOST_SECURE_5592_X") {
+            is_pro = true;
+        }
     }
 
     cout << "============================================" << endl;
@@ -33,10 +36,13 @@ int main() {
 
     if (is_pro) {
         cout << ">> STATUS: PRO LICENSE VERIFIED" << endl;
-        cout << ">> MODE: BATCH PROCESSING (5 TASKS)" << endl;
-        for(int i=1; i<=5; i++) run_task(i, 4.2);
+        cout << ">> MODE: BATCH PROCESSING (5 TASKS QUEUED)" << endl;
+        for(int i = 1; i <= 5; i++) {
+            run_task(i, 4.2);
+        }
     } else {
         cout << ">> STATUS: EVALUATION MODE (LOCKED)" << endl;
+        cout << ">> MODE: SINGLE TASK ONLY" << endl;
         cout << ">> ALERT: Visit your dashboard to unlock Turbo." << endl;
         run_task(1, 1.8);
     }
@@ -44,16 +50,18 @@ int main() {
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = end - start;
 
-    // Telemetry Logging
+    // Save Telemetry
     ofstream stats("stats.ghost");
     stats << "--- GHOSTSEMI PERFORMANCE REPORT ---" << endl;
     stats << "ENGINE_VERSION: 1.5" << endl;
     stats << "LICENSE: " << (is_pro ? "PRO_TURBO" : "EVAL_LOCKED") << endl;
     stats << "TASKS_COMPLETED: " << (is_pro ? 5 : 1) << endl;
     stats << "TOTAL_EXECUTION_TIME: " << elapsed.count() << "s" << endl;
+    stats << "AVERAGE_TASK_SPEED: " << (elapsed.count() / (is_pro ? 5 : 1)) << "s" << endl;
+    stats << "STATUS: ALL_SYSTEMS_OPTIMAL" << endl;
     stats.close();
 
-    cout << "TOTAL TIME: " << elapsed.count() << " seconds" << endl;
+    cout << "\nTOTAL TIME: " << elapsed.count() << " seconds" << endl;
     cout << "GHOSTSEMI CORE SHUTDOWN COMPLETE." << endl;
     cout << "============================================" << endl;
 

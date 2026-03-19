@@ -2,40 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GhostSemi | Silicon Infrastructure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        body { background: #0a0a0c; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px; }
-        .cta-button { background: #00d4ff; color: black; padding: 15px 30px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .cta-button:hover { background: white; }
-        input { padding: 12px; background: #16161a; border: 1px solid #333; color: #00d4ff; width: 280px; }
+        :root { --neon: #00d4ff; --dark: #0a0a0c; --panel: #16161a; }
+        body { background-color: var(--dark); color: white; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); letter-spacing: 5px; font-size: 3rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--neon); }
+        .subtitle { font-family: 'Courier New', monospace; color: #888; margin-bottom: 40px; }
+        .reg-card { background: var(--panel); padding: 40px; border: 1px solid #333; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input { padding: 15px; width: 300px; background: #000; border: 1px solid #444; color: var(--neon); font-family: 'Courier New', monospace; outline: none; border-radius: 5px; }
+        .cta-button { margin-top: 25px; padding: 15px 40px; background: var(--neon); border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+        .cta-button:hover { background: white; transform: scale(1.05); }
     </style>
 </head>
 <body>
-    <h1>GHOSTSEMI ALPHA ACCESS</h1>
-    <p>Secure your slot in the software-defined silicon queue.</p>
 
-    <div class="registration-box">
-        <input type="email" id="userEmail" placeholder="you@company.com" required>
-        <br><br>
+    <h1>GHOSTSEMI</h1>
+    <p class="subtitle">PROVISIONING ALPHA ACCESS // CORE v1.5</p>
+
+    <div class="reg-card">
+        <input type="email" id="userEmail" placeholder="CREDENTIALS@COMPANY.COM">
+        <br>
         <button onclick="submitToGoogle()" class="cta-button">SECURE ACCESS</button>
     </div>
 
     <script>
     function submitToGoogle() {
-        const email = document.getElementById('userEmail').value;
-        const btn = document.querySelector('.cta-button');
+        const email = document.getElementById('userEmail').value.trim();
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyB1NAzzWFo2rjBx8W0i0NOWVDZm_OEwGt_dh9R-phVZ9v4FhooTkTq-anENAYf5DcRvA/exec';
+        const btn = document.querySelector('.cta-button');
 
-        if(!email.includes('@')) { alert("Invalid Email"); return; }
+        if(!email.includes('@')) { alert("ACCESS DENIED: INVALID CREDENTIALS"); return; }
 
-        btn.innerHTML = "PROVISIONING...";
+        btn.innerHTML = "UPLOADING...";
         btn.disabled = true;
 
-        fetch(scriptURL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: new URLSearchParams({'email': email})
-        })
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'email': email})})
         .then(() => { window.location.href = 'success.html'; })
         .catch(() => { window.location.href = 'success.html'; });
     }
