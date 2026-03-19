@@ -4,91 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GhostSemi | Software-Defined Silicon</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="icon" href="https://img.icons8.com/ios-filled/50/00d4ff/ghost.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #16161a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(180deg, #111 0%, #0a0a0c 100%);
+            border-bottom: 1px solid #222;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 5px;
+            color: var(--accent-color);
+            margin: 0;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #888;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        main {
+            max-width: 800px;
+            width: 90%;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .hero-section {
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: #1c1c21;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* --- WAITLIST FORM --- */
+        .waitlist-container {
+            margin-top: 40px;
+        }
+
+        input[type="email"] {
+            width: 70%;
+            max-width: 350px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #050505;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        button.cta-button {
+            padding: 15px 40px;
+            background: var(--accent-color);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        button.cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent-color);
+            background: #fff;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
 
     <header>
-        <nav>
-            <div class="logo">GHOST<span class="highlight">SEMI</span></div>
-            <div class="tagline">v1.0 Virtual Substrate</div>
-        </nav>
-        <div class="hero">
-            <h1>Hardware Performance. <br><span class="highlight">Software Delivery.</span></h1>
-            <p>Bypass physical CPU limitations with our patented Ghost Bridge technology.</p>
-        </div>
+        <h1>GHOSTSEMI</h1>
+        <p class="subtitle">Virtual Silicon Architecture</p>
     </header>
 
-    <section class="live-bench">
-        <h3>REAL-TIME SYSTEM THROUGHPUT</h3>
-        <div class="chart-container">
-            <div class="label">Standard CPU Logic</div>
-            <div class="bar-bg"><div class="bar" style="width: 58%;">58% Efficiency</div></div>
-            
-            <div class="label">GhostSemi Virtual Gates</div>
-            <div class="bar-bg"><div id="ghost-bar" class="bar ghost">99% Efficiency</div></div>
-        </div>
-    </section>
+    <main>
+        <div class="hero-section">
+            <h2>The Future of High-Performance Computing</h2>
+            <p>Deploy a virtual semiconductor engine directly on your OS. No physical hardware required. Unlock the power of 4.2 GHz simulated cycles today.</p>
 
-    <section class="pricing">
-        <div class="price-card">
-            <h3>BASIC</h3>
-            <div class="amount">$0</div>
-            <ul>
-                <li>5% Performance Boost</li>
-                <li>Standard Support</li>
-                <li>Community License</li>
-            </ul>
-            <button class="btn-secondary">Get Basic</button>
-        </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value">1.8 GHz</span>
+                    <span class="stat-label">Base Clock</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4.2 GHz</span>
+                    <span class="stat-label">Turbo Mode</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">&lt; 1ms</span>
+                    <span class="stat-label">Latency</span>
+                </div>
+            </div>
 
-        <div class="price-card pro">
-            <div class="badge">RECOMMENDED</div>
-            <h3>PRO</h3>
-            <div class="amount">$14.99<span>/mo</span></div>
-            <ul>
-                <li><strong>41% Logic Acceleration</strong></li>
-                <li>Neural Bridge Access</li>
-                <li>Priority Threading</li>
-                <li>Enterprise Encryption</li>
-            </ul>
-            <button class="btn-primary">Upgrade to Pro</button>
+            <div class="waitlist-container">
+                <h3>JOIN THE ALPHA WAITLIST</h3>
+                <p>Register your email to secure your GhostSemi license key.</p>
+                
+                <form action="https://formspree.io/f/xkoqybke" method="POST">
+                    <input type="email" name="email" placeholder="you@company.com" required>
+                    <input type="hidden" name="_subject" value="New GhostSemi Alpha Sign-up!">
+                    <br>
+                    <button type="submit" class="cta-button">SECURE ACCESS</button>
+                </form>
+            </div>
         </div>
-    </section>
-<section class="waitlist">
-    <h3>READY TO BYPASS SILICON?</h3>
-    <p>Join 500+ engineers on the GhostSemi priority waitlist.</p>
-    <div class="input-group">
-        <input type="email" id="user-email" placeholder="Enter your email...">
-        <button class="btn-primary" onclick="joinWaitlist()">JOIN WAITLIST</button>
-    </div>
-    <p id="success-msg" style="display:none; color: #00d4ff; margin-top: 10px;">You're on the list, Founder. Stand by for v1.1.</p>
-</section>
+    </main>
 
-<script>
-    function joinWaitlist() {
-        const email = document.getElementById('user-email').value;
-        if(email.includes('@')) {
-            document.getElementById('success-msg').style.display = 'block';
-            document.querySelector('.input-group').style.display = 'none';
-        } else {
-            alert("Please enter a valid business email.");
-        }
-    }
-</script>
     <footer>
-        <p>&copy; 2026 GhostSemi Technologies. Disrupting the Silicon Cycle.</p>
+        &copy; 2026 GhostSemi Infrastructure. All rights reserved.
     </footer>
 
-    <script>
-        // Simulates the active optimization of the software chip
-        setInterval(() => {
-            const bar = document.getElementById('ghost-bar');
-            const speed = Math.floor(Math.random() * (100 - 94 + 1)) + 94;
-            bar.style.width = speed + "%";
-            bar.innerText = speed + "% Efficiency";
-        }, 1500);
-    </script>
 </body>
 </html>
