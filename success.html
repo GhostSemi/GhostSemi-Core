@@ -3,40 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GhostSemi | Alpha Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <title>GhostSemi | Alpha Provisioning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00d4ff; --dark: #050507; --panel: #111114; }
-        body { background-color: var(--dark); color: white; font-family: 'Roboto Mono', monospace; margin: 0; padding: 40px; text-align: center; }
-        .container { max-width: 800px; margin: 0 auto; background: var(--panel); border: 1px solid #222; padding: 40px; border-radius: 15px; box-shadow: 0 0 50px rgba(0, 212, 255, 0.1); }
-        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; }
-        .key-box { background: #000; border: 2px dashed var(--neon); padding: 20px; font-size: 1.5rem; color: white; margin: 20px 0; display: inline-block; }
-        .download-zone { margin-top: 40px; padding: 30px; border-top: 1px solid #333; }
-        .dl-button { background: white; color: black; padding: 15px 40px; text-decoration: none; font-weight: bold; font-family: 'Orbitron', sans-serif; display: inline-block; transition: 0.3s; }
-        .dl-button:hover { background: var(--neon); transform: translateY(-3px); }
-        .steps { text-align: left; display: inline-block; color: #888; margin-top: 20px; font-size: 0.9rem; }
+        :root { --neon: #00d4ff; --dark: #050507; --panel: #111114; --success: #39FF14; }
+        body { background-color: var(--dark); color: white; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        .container { 
+            max-width: 700px; width: 100%; background: var(--panel); 
+            border: 1px solid #222; padding: 40px; border-radius: 15px; 
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.05); position: relative;
+        }
+
+        .status-badge {
+            position: absolute; top: 20px; right: 20px;
+            font-size: 0.7rem; color: var(--success); border: 1px solid var(--success);
+            padding: 5px 10px; border-radius: 3px; letter-spacing: 1px;
+        }
+
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 10px; font-size: 1.8rem; }
+        .subtitle { color: #888; margin-bottom: 30px; font-size: 0.9rem; border-bottom: 1px solid #222; padding-bottom: 20px; }
+
+        .key-section { margin: 30px 0; }
+        .key-label { font-size: 0.7rem; color: #555; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .key-box { 
+            background: #000; border: 1px solid var(--neon); padding: 20px; 
+            font-size: 1.4rem; color: white; display: inline-block; 
+            font-family: 'Orbitron', sans-serif; letter-spacing: 3px;
+        }
+
+        .billing-card {
+            background: #0a0a0c; border: 1px solid #1a1a1a; padding: 20px;
+            text-align: left; margin: 30px 0; border-radius: 8px; font-size: 0.85rem;
+        }
+        .billing-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #aaa; }
+        .billing-row strong { color: #fff; }
+
+        .download-zone { margin-top: 40px; }
+        .dl-button { 
+            background: var(--neon); color: black; padding: 18px 45px; 
+            text-decoration: none; font-weight: bold; font-family: 'Orbitron', sans-serif; 
+            display: inline-block; transition: 0.3s; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+        }
+        .dl-button:hover { background: white; transform: scale(1.05); box-shadow: 0 0 20px var(--neon); }
+
+        .footer-note { margin-top: 30px; color: #444; font-size: 0.7rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>PROVISIONING COMPLETE</h1>
-        <p>Your node is now active in the GhostSemi Alpha network.</p>
+        <div class="status-badge">SUBSCRIPTION: ACTIVE</div>
         
-        <div class="key-box">
-            ALPHA KEY: <span style="color: var(--neon);">GHOST-PRO-2026</span>
+        <h1>PROVISIONING COMPLETE</h1>
+        <p class="subtitle">ALPHA ACCESS GRANTED // NODE_ID: GS-2026-X</p>
+        
+        <div class="key-section">
+            <span class="key-label">Your Unique Pro Key</span>
+            <div class="key-box">GHOST-PRO-2026</div>
+        </div>
+
+        <div class="billing-card">
+            <div class="billing-row"><span>License Type:</span> <strong>Alpha Professional</strong></div>
+            <div class="billing-row"><span>Billing Cycle:</span> <strong>Trial (60 Days)</strong></div>
+            <div class="billing-row"><span>Service Status:</span> <strong style="color: var(--success);">Operational</strong></div>
+            <div class="billing-row"><span>Provisioned To:</span> <strong>[Verified Member]</strong></div>
         </div>
 
         <div class="download-zone">
-            <h3>CORE ASSETS</h3>
-            <p>Download the v1.5 stable binaries to begin execution.</p>
-            <a href="https://github.com/GhostSemi/GhostSemi-Core/releases" class="dl-button">DOWNLOAD BINARIES (.EXE)</a>
-            <br>
-            <div class="steps">
-                <p>1. Extract the ZIP folder to your desktop.</p>
-                <p>2. Run <strong>dashboard.exe</strong> and enter your Alpha Key.</p>
-                <p>3. Initialize <strong>GhostAI.exe</strong> to start silicon simulation.</p>
-            </div>
+            <p style="margin-bottom: 20px; font-size: 0.9rem; color: #888;">Download the stable binary package (v1.5) to begin deployment.</p>
+            <a href="https://github.com/GhostSemi/GhostSemi-Core/releases" class="dl-button">DOWNLOAD BINARIES</a>
+        </div>
+
+        <div class="footer-note">
+            SECURE TRANSMISSION ENCRYPTED BY GHOSTSEMI CORE PROTOCOL V1.5
         </div>
     </div>
 
