@@ -56,12 +56,12 @@
 
         // Secure Handshake - JSON Transfer
         fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ "email": email }) 
-        })
+    method: 'POST',
+    mode: 'no-cors', 
+    cache: 'no-cache',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ "email": email }) // This triggers the JSON.parse in your script
+})
         .then(() => { 
             console.log("Success: Redirecting to Provisioning Terminal");
             window.location.href = 'success.html'; 
