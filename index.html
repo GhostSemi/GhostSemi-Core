@@ -49,7 +49,7 @@
         <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; color: #fff; margin-bottom: 25px; letter-spacing: 1px;">[ PHASE 01: REQUEST ALPHA KEY ]</h2>
         <input type="email" id="userEmail" placeholder="ENTER@CREDENTIALS.COM" spellcheck="false">
         <br>
-        <button onclick="submitToGoogle()" class="cta-button" id="mainBtn">SECURE ACCESS</button>
+        <button onclick="payWithPaystack()" class="cta-button" id="mainBtn">SECURE ACCESS</button>
     </div>
 
     <div class="download-section">
@@ -65,24 +65,41 @@
         </div>
     </div>
 
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
     <script>
-    function submitToGoogle() {
+    function payWithPaystack() {
         const emailInput = document.getElementById('userEmail');
         const email = emailInput.value.trim();
-        const btn = document.getElementById('mainBtn');
-
-        // Current Verified Backend URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwO9XXqeBFantsfPI1qTDUat_BYAt2bh5efzUEGR4IzA7wja8vcpB5d7JWGh7mpF8ZysQ/exec';
         
         if(!email.includes('@') || email.length < 5) { 
             alert("ACCESS DENIED: INVALID CREDENTIALS FORMAT"); 
             return; 
         }
 
+        const handler = PaystackPop.setup({
+            key: 'pk_test_ce6a9fd2968689000387bca6c60ee70e80708e39', 
+            email: email,
+            amount: 130000, // 1,300 KES
+            currency: 'KES',
+            callback: function(response) {
+                // Once paid, run the provisioning script
+                submitToGoogle(email, response.reference);
+            },
+            onClose: function() {
+                alert('TRANSACTION CANCELLED');
+            }
+        });
+        handler.openIframe();
+    }
+
+    function submitToGoogle(email, paystackRef) {
+        const btn = document.getElementById('mainBtn');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwO9XXqeBFantsfPI1qTDUat_BYAt2bh5efzUEGR4IzA7wja8vcpB5d7JWGh7mpF8ZysQ/exec';
+
         btn.innerHTML = "ESTABLISHING HANDSHAKE...";
         btn.disabled = true;
 
-        // v2.0 SECURE PAYLOAD: Adding auth_token to satisfy the Door 2 Security Gate
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors', 
@@ -90,17 +107,15 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 "email": email,
-                "auth_token": "SECRET_ALPHA_TOKEN_99" // Door 2 Security Token
+                "paystack_ref": paystackRef,
+                "auth_token": "SECRET_ALPHA_TOKEN_99" 
             })
         })
         .then(() => { 
-            console.log("Success: Handshake Confirmed");
-            // Redirect to success page (make sure success.html exists in your repo!)
             window.location.href = 'success.html'; 
         })
         .catch((error) => { 
             console.error("Critical Connection Error:", error);
-            // Fallback redirect so UX remains smooth
             window.location.href = 'success.html'; 
         });
     }
