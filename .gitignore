@@ -1,8 +1,7 @@
-# Ignore the compiled engine and telemetry
-GhostAI.exe
-stats.ghost
+# GhostSemi Security Shield
+pro_mode.txt
+*.exe
+__pycache__/
+.env
 dist/
 build/
-__pycache__/
-.venv/
-.vscode/
