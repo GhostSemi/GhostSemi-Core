@@ -6,7 +6,7 @@
     <title>GhostSemi | Alpha Provisioning</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00d4ff; --dark: #050507; --panel: #111114; --success: #39FF14; }
+        :root { --neon: #00d4ff; --dark: #050507; --panel: #111114; --success: #39FF14; --alert: #ff3e3e; }
         body { background-color: var(--dark); color: white; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         
         .container { 
@@ -24,23 +24,29 @@
         h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 10px; font-size: 1.8rem; }
         .subtitle { color: #888; margin-bottom: 30px; font-size: 0.9rem; border-bottom: 1px solid #222; padding-bottom: 20px; }
 
-        .key-section { margin: 30px 0; }
+        .key-section { margin: 25px 0; }
         .key-label { font-size: 0.7rem; color: #555; text-transform: uppercase; margin-bottom: 10px; display: block; }
         .key-box { 
-            background: #000; border: 1px solid var(--neon); padding: 20px; 
-            font-size: 1.1rem; color: white; display: inline-block; 
-            font-family: 'Orbitron', sans-serif; letter-spacing: 2px;
-            width: 90%;
+            background: #000; border: 1px solid var(--neon); padding: 15px; 
+            font-size: 1rem; color: white; display: block; 
+            font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .security-alert {
+            background: rgba(255, 62, 62, 0.1); border: 1px solid var(--alert);
+            padding: 15px; margin: 20px 0; border-radius: 5px; font-size: 0.8rem;
+            color: #ff9999; line-height: 1.5;
         }
 
         .billing-card {
             background: #0a0a0c; border: 1px solid #1a1a1a; padding: 20px;
-            text-align: left; margin: 30px 0; border-radius: 8px; font-size: 0.85rem;
+            text-align: left; margin: 25px 0; border-radius: 8px; font-size: 0.85rem;
         }
         .billing-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #aaa; }
         .billing-row strong { color: #fff; }
 
-        .download-zone { margin-top: 40px; }
+        .download-zone { margin-top: 30px; text-align: center; }
         .dl-button { 
             background: var(--neon); color: black; padding: 18px 45px; 
             text-decoration: none; font-weight: bold; font-family: 'Orbitron', sans-serif; 
@@ -48,7 +54,7 @@
         }
         .dl-button:hover { background: white; transform: scale(1.05); box-shadow: 0 0 20px var(--neon); }
 
-        .footer-note { margin-top: 30px; color: #444; font-size: 0.7rem; letter-spacing: 1px; }
+        .footer-note { margin-top: 30px; color: #444; font-size: 0.7rem; letter-spacing: 1px; text-align: center; }
     </style>
 </head>
 <body>
@@ -62,19 +68,28 @@
         <div class="key-section">
             <span class="key-label">Access Credentials Dispatch</span>
             <div class="key-box">
-                SUCCESS: UNIQUE ALPHA KEY DISPATCHED TO ENCRYPTED INBOX. CHECK YOUR EMAIL.
+                CHECK YOUR EMAIL FOR YOUR UNIQUE ALPHA KEY.
             </div>
         </div>
 
+        <div class="security-alert">
+            <strong>⚠️ CRITICAL: WINDOWS SECURITY CLEARANCE</strong><br>
+            If Windows blocks the file: <br>
+            1. <strong>Right-Click</strong> the downloaded .exe <br>
+            2. Select <strong>Properties</strong> <br>
+            3. Check <strong>'Unblock'</strong> at the bottom <br>
+            4. Click <strong>Apply</strong> and Run.
+        </div>
+
         <div class="billing-card">
-            <div class="billing-row"><span>License Type:</span> <strong>Alpha Professional (v2.0)</strong></div>
+            <div class="billing-row"><span>License Type:</span> <strong>Alpha Pro (v2.0)</strong></div>
             <div class="billing-row"><span>Billing Cycle:</span> <strong>Trial (60 Days)</strong></div>
             <div class="billing-row"><span>Service Status:</span> <strong style="color: var(--success);">Operational</strong></div>
-            <div class="billing-row"><span>Provisioned To:</span> <strong>Verified Alpha Member</strong></div>
+            <div class="billing-row"><span>Provisioned To:</span> <strong>Verified Member</strong></div>
         </div>
 
         <div class="download-zone">
-            <p style="margin-bottom: 20px; font-size: 0.9rem; color: #888;">Deploy the standalone binary package to finalize system handshake.</p>
+            <p style="margin-bottom: 20px; font-size: 0.85rem; color: #888;">Deploy the standalone binary package to finalize system handshake.</p>
             <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v2.0-alpha/GhostSemi_Console.exe" class="dl-button">DEPLOY BINARY (.EXE)</a>
         </div>
 
