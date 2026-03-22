@@ -16,25 +16,47 @@
     
     <style>
         :root { --neon: #00d4ff; --dark: #0a0a0c; --panel: #16161a; }
-        body { background-color: var(--dark); color: white; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
-        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); letter-spacing: 5px; font-size: 3rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--neon); }
-        .subtitle { font-family: 'Courier New', monospace; color: #888; margin-bottom: 40px; }
-        .reg-card { background: var(--panel); padding: 40px; border: 1px solid #333; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { padding: 15px; width: 300px; background: #000; border: 1px solid #444; color: var(--neon); font-family: 'Courier New', monospace; outline: none; border-radius: 5px; }
-        .cta-button { margin-top: 25px; padding: 15px 40px; background: var(--neon); border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+        body { background-color: var(--dark); color: white; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; text-align: center; padding: 50px 20px; box-sizing: border-box; }
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); letter-spacing: 5px; font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--neon); }
+        .subtitle { font-family: 'Courier New', monospace; color: #888; margin-bottom: 40px; text-transform: uppercase; }
+        
+        .reg-card { background: var(--panel); padding: 40px; border: 1px solid #333; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 450px; }
+        input { padding: 15px; width: 80%; background: #000; border: 1px solid #444; color: var(--neon); font-family: 'Courier New', monospace; outline: none; border-radius: 5px; margin-bottom: 10px; }
+        
+        .cta-button { margin-top: 25px; padding: 15px 40px; background: var(--neon); border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); width: 100%; max-width: 300px; }
         .cta-button:hover { background: white; transform: scale(1.05); }
         .cta-button:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        /* v1.9 Download Section Styles */
+        .download-section { margin-top: 60px; padding: 40px; border-top: 1px solid #222; width: 100%; max-width: 600px; }
+        .download-btn { display: inline-block; margin-top: 20px; padding: 18px 45px; background: transparent; color: var(--neon); border: 2px solid var(--neon); text-decoration: none; font-family: 'Orbitron', sans-serif; font-weight: bold; letter-spacing: 2px; transition: 0.4s; border-radius: 5px; }
+        .download-btn:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+        .specs { margin-top: 15px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #555; }
     </style>
 </head>
 <body>
 
     <h1>GHOSTSEMI</h1>
-    <p class="subtitle">PROVISIONING ALPHA ACCESS // CORE v1.5</p>
+    <p class="subtitle">PROVISIONING ALPHA ACCESS // CORE v1.8</p>
 
     <div class="reg-card">
+        <h2 style="font-family: 'Orbitron'; font-size: 1rem; color: #fff; margin-bottom: 20px;">1. REQUEST ALPHA KEY</h2>
         <input type="email" id="userEmail" placeholder="CREDENTIALS@COMPANY.COM">
         <br>
         <button onclick="submitToGoogle()" class="cta-button">SECURE ACCESS</button>
+    </div>
+
+    <div class="download-section">
+        <h2 style="font-family: 'Orbitron'; font-size: 1rem; color: #fff;">2. DEPLOY MANAGEMENT CONSOLE</h2>
+        <p style="color: #888; font-size: 0.9rem;">Once registered, download the standalone console to initiate silicon handshake.</p>
+        
+        <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v1.8-alpha/dashboard.exe" class="download-btn">
+            DOWNLOAD ALPHA .EXE
+        </a>
+
+        <div class="specs">
+            BUILD: v1.8-ALPHA | ARCH: X64 | OS: WIN_10_11
+        </div>
     </div>
 
     <script>
@@ -43,8 +65,8 @@
         const email = emailInput.value.trim();
         const btn = document.querySelector('.cta-button');
 
-        // v1.7 Verified Backend URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxGfrmp34OUKTl7zOBpYGEnaw3lXNwMPvDtqORtqrFsLIe5-Lrnp7RcF5p-qmvBCOredA/exec';
+        
         if(!email.includes('@')) { 
             alert("ACCESS DENIED: INVALID CREDENTIALS"); 
             return; 
@@ -53,21 +75,19 @@
         btn.innerHTML = "PROVISIONING...";
         btn.disabled = true;
 
-        // Secure Handshake - JSON Transfer
         fetch(scriptURL, {
-    method: 'POST',
-    mode: 'no-cors', 
-    cache: 'no-cache',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ "email": email }) // This triggers the JSON.parse in your script
-})
+            method: 'POST',
+            mode: 'no-cors', 
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "email": email })
+        })
         .then(() => { 
             console.log("Success: Redirecting to Provisioning Terminal");
             window.location.href = 'success.html'; 
         })
         .catch((error) => { 
             console.error("Critical Connection Error:", error);
-            // Still redirect to keep the UX smooth if script fires correctly
             window.location.href = 'success.html'; 
         });
     }
