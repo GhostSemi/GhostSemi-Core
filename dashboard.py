@@ -12,11 +12,11 @@ import requests
 import sys
 import subprocess
 
-# --- CORE v2.0 SECURITY: HARDWARE ID FINGERPRINT ---
+# --- CORE v2.1 SECURITY: HARDWARE ID FINGERPRINT ---
 def get_hwid():
     """Generates a unique ID based on the computer's motherboard/CPU."""
     try:
-        # Grabbing the UUID and cleaning up the output string
+        # Surgical extraction of UUID to prevent Windows permissions errors
         cmd = 'wmic csproduct get uuid'
         uuid = subprocess.check_output(cmd, shell=True).decode().split('\n')[1].strip()
         return uuid
@@ -27,15 +27,17 @@ def get_hwid():
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-# v1.8 - v2.0: Your Live Silicon Infrastructure Link (CSV)
+# v2.1: LINK TO YOUR INFRASTRUCTURE
+# Note: Ensure Column B is 'Email', Column C is 'Key', and Column E is 'HWID' in your Sheet
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRxluW8fJg1oJD1G8CTc47JuaKFrfKRW7cxVEOKUhoH5z1oxiq80XcHUGDZ5kkNuIfmfEIexGdaJxg/pub?output=csv"
+SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbw79KJZvcdIVMmEpzSif9xzbhdCXS4QoscA7zkyCiuaU3vrwy6H4n3Tfhz-CDLnlFF0Ug/exec"
 
 class GhostDashboard(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         # --- WINDOW CONFIG ---
-        self.title("GhostSemi | Management Console v2.0")
+        self.title("GhostSemi | Management Console v2.1")
         self.geometry("500x650") 
         self.protocol('WM_DELETE_WINDOW', self.hide_to_tray)
         
@@ -47,7 +49,7 @@ class GhostDashboard(ctk.CTk):
         self.header = ctk.CTkLabel(self, text="GHOSTSEMI CORE", font=("Orbitron", 28, "bold"), text_color="#00d4ff")
         self.header.pack(pady=(25, 5))
 
-        self.version_label = ctk.CTkLabel(self, text="SILICON INFRASTRUCTURE v2.0", font=("Courier", 10), text_color="#555")
+        self.version_label = ctk.CTkLabel(self, text="SILICON INFRASTRUCTURE v2.1", font=("Courier", 10), text_color="#555")
         self.version_label.pack()
 
         self.status_label = ctk.CTkLabel(self, text="STATUS: INITIALIZING...", font=("Roboto", 14))
@@ -82,7 +84,6 @@ class GhostDashboard(ctk.CTk):
         self.tray_button = ctk.CTkButton(self, text="MINIMIZE TO TRAY", fg_color="transparent", text_color="#888", border_width=1, border_color="#222", command=self.hide_to_tray)
         self.tray_button.pack(pady=10)
 
-        # Run persistence check on startup
         self.check_persistence()
 
     def check_persistence(self):
@@ -90,7 +91,6 @@ class GhostDashboard(ctk.CTk):
         if os.path.exists("pro_mode.txt"):
             with open("pro_mode.txt", "r") as f:
                 stored_token = f.read().strip()
-                # Security: Only unlock if the local token contains the unique hardware fingerprint
                 if f"GHOST_SECURE_{self.current_hwid[:8]}" in stored_token:
                     self.unlock_ui()
                     winsound.Beep(1000, 150)
@@ -103,7 +103,6 @@ class GhostDashboard(ctk.CTk):
         self.status_label.configure(text="STATUS: EVALUATION MODE", text_color="#888")
 
     def start_verification(self):
-        """Prepares UI for Cloud Handshake."""
         email = self.email_entry.get().strip()
         key = self.license_entry.get().strip()
 
@@ -112,28 +111,41 @@ class GhostDashboard(ctk.CTk):
             return
 
         self.upgrade_button.configure(text="HANDSHAKING...", state="disabled")
-        
-        # Threading prevents GUI freeze during the CSV download
         threading.Thread(target=self.cloud_handshake, args=(email, key), daemon=True).start()
 
     def cloud_handshake(self, email, key):
-        """v2.0: Reaches out to database and cross-references Hardware Fingerprint."""
+        """v2.1: Verifies credentials and binds Hardware ID (Column E)."""
         try:
             response = requests.get(SHEET_CSV_URL, timeout=12)
             data = pd.read_csv(io.StringIO(response.text))
             
-            # Match credentials
+            # 1. Check if Email and Key exist
             valid_user = data[(data['Email'] == email) & (data['Key'] == key)]
 
             if not valid_user.empty:
-                # OPTIONAL: You can add logic here to check a column named 'HWID' in your sheet
-                # to see if the key has been used on a different machine before.
-                self.after(0, self.activation_success)
+                existing_hwid = str(valid_user.iloc[0]['HWID']).strip()
+
+                # 2. BINDING LOGIC (COLUMN E)
+                if existing_hwid == "nan" or existing_hwid == "" or existing_hwid == self.current_hwid:
+                    
+                    # 3. REGISTER HWID IN DATABASE (The missing link)
+                    if existing_hwid == "nan" or existing_hwid == "":
+                        requests.post(SCRIPT_API_URL, json={
+                            "action": "register_hwid",
+                            "email": email,
+                            "hwid": self.current_hwid,
+                            "auth_token": "SECRET_ALPHA_TOKEN_99"
+                        })
+                    
+                    self.after(0, self.activation_success)
+                else:
+                    self.after(0, lambda: messagebox.showerror("Hardware Lock", "Key already bound to another device."))
+                    self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
             else:
                 self.after(0, self.activation_denied)
 
         except Exception as e:
-            self.after(0, lambda: messagebox.showerror("Handshake Error", f"Could not reach Silicon Cloud: {e}"))
+            self.after(0, lambda: messagebox.showerror("Handshake Error", f"Cloud Unreachable: Check Network Connection."))
             self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
 
     def activation_success(self):
@@ -141,21 +153,19 @@ class GhostDashboard(ctk.CTk):
         winsound.Beep(800, 100)
         winsound.Beep(1300, 350)
         
-        # Save a Hardware-Bound Token locally
         secure_token = f"GHOST_SECURE_{self.current_hwid[:8]}_X"
         with open("pro_mode.txt", "w") as f: 
             f.write(secure_token)
             
         self.unlock_ui()
-        messagebox.showinfo("GhostSemi v2.0", "Handshake Verified. Device Authorized for Turbo.")
+        messagebox.showinfo("GhostSemi v2.1", "Handshake Verified. System Optimized.")
 
     def activation_denied(self):
         winsound.Beep(300, 600)
-        messagebox.showerror("Access Denied", "Invalid Credentials or Unauthorized Hardware.")
+        messagebox.showerror("Access Denied", "Invalid Credentials.")
         self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal")
 
     def unlock_ui(self):
-        """Activates the Neon Blue 'Turbo' Interface."""
         self.status_label.configure(text="STATUS: PRO ACTIVE", text_color="#00d4ff")
         self.progress_bar.configure(progress_color="#00d4ff")
         self.progress_bar.set(1.0) 
@@ -166,10 +176,9 @@ class GhostDashboard(ctk.CTk):
 
     def hide_to_tray(self):
         self.withdraw()
-        # Create small icon for tray
         image = Image.new('RGB', (64, 64), color=(0, 212, 255))
         menu = (item('Open Console', self.show_window), item('Exit', self.destroy))
-        self.icon_manager = pystray.Icon("GhostSemi", image, "GhostSemi v2.0", menu)
+        self.icon_manager = pystray.Icon("GhostSemi", image, "GhostSemi v2.1", menu)
         threading.Thread(target=self.icon_manager.run, daemon=True).start()
 
     def show_window(self):
