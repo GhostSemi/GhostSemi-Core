@@ -16,28 +16,126 @@
     
     <style>
         :root { --neon: #00d4ff; --dark: #0a0a0c; --panel: #16161a; }
-        body { background-color: var(--dark); color: white; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; text-align: center; padding: 50px 20px; box-sizing: border-box; }
+        body { 
+            background-color: var(--dark); 
+            color: white; 
+            font-family: 'Roboto', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            min-height: 100vh; 
+            text-align: center; 
+            padding: 50px 20px; 
+            box-sizing: border-box; 
+        }
         
-        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); letter-spacing: 5px; font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--neon); }
-        .subtitle { font-family: 'Courier New', monospace; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { 
+            font-family: 'Orbitron', sans-serif; 
+            color: var(--neon); 
+            letter-spacing: 5px; 
+            font-size: 3.5rem; 
+            margin-bottom: 10px; 
+            text-shadow: 0 0 15px var(--neon); 
+        }
         
-        /* Registration Card */
-        .reg-card { background: var(--panel); padding: 40px; border: 1px solid #333; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 450px; transition: 0.3s; }
+        .subtitle { 
+            font-family: 'Courier New', monospace; 
+            color: #888; 
+            margin-bottom: 40px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+        }
+        
+        .reg-card { 
+            background: var(--panel); 
+            padding: 40px; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 450px; 
+            transition: 0.3s; 
+        }
+        
         .reg-card:hover { border-color: var(--neon); }
         
-        input { padding: 15px; width: 85%; background: #000; border: 1px solid #444; color: var(--neon); font-family: 'Courier New', monospace; outline: none; border-radius: 5px; margin-bottom: 15px; text-align: center; }
-        input:focus { border-color: var(--neon); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+        input { 
+            padding: 15px; 
+            width: 85%; 
+            background: #000; 
+            border: 1px solid #444; 
+            color: var(--neon); 
+            font-family: 'Courier New', monospace; 
+            outline: none; 
+            border-radius: 5px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
         
-        .cta-button { margin-top: 10px; padding: 18px 40px; background: var(--neon); border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); width: 100%; max-width: 320px; color: #000; }
+        input:focus { border-color: var(--neon); }
+        
+        .cta-button { 
+            margin-top: 10px; 
+            padding: 18px 40px; 
+            background: var(--neon); 
+            border: none; 
+            font-family: 'Orbitron', sans-serif; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); 
+            width: 100%; 
+            max-width: 320px; 
+            color: #000; 
+        }
+        
         .cta-button:hover { background: white; transform: scale(1.03); }
-        .cta-button:disabled { background: #222; color: #555; cursor: not-allowed; clip-path: none; border-radius: 5px; }
 
-        /* Download Section */
-        .download-section { margin-top: 60px; padding: 40px; border-top: 1px solid #222; width: 100%; max-width: 600px; }
-        .download-btn { display: inline-block; margin-top: 25px; padding: 18px 45px; background: transparent; color: var(--neon); border: 2px solid var(--neon); text-decoration: none; font-family: 'Orbitron', sans-serif; font-weight: bold; letter-spacing: 2px; transition: 0.4s; border-radius: 5px; }
-        .download-btn:hover { background: var(--neon); color: black; box-shadow: 0 0 25px var(--neon); }
+        .download-section { 
+            margin-top: 60px; 
+            padding: 40px; 
+            border-top: 1px solid #222; 
+            width: 100%; 
+            max-width: 600px; 
+        }
         
-        .specs { margin-top: 20px; font-family: 'Courier New', monospace; font-size: 0.75rem; color: #444; letter-spacing: 1px; }
+        .download-btn { 
+            display: inline-block; 
+            margin-top: 25px; 
+            padding: 18px 45px; 
+            background: transparent; 
+            color: var(--neon); 
+            border: 2px solid var(--neon); 
+            text-decoration: none; 
+            font-family: 'Orbitron', sans-serif; 
+            font-weight: bold; 
+            letter-spacing: 2px; 
+            transition: 0.4s; 
+            border-radius: 5px; 
+        }
+        
+        .download-btn:hover { 
+            background: var(--neon); 
+            color: black; 
+            box-shadow: 0 0 25px var(--neon); 
+        }
+        
+        .specs { 
+            margin-top: 20px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 0.7rem; 
+            color: #444; 
+            line-height: 1.6; 
+        }
+        
+        .hash-tag { 
+            color: #555; 
+            word-break: break-all; 
+            margin-top: 10px; 
+            display: block; 
+        }
     </style>
 </head>
 <body>
@@ -54,14 +152,15 @@
 
     <div class="download-section">
         <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; color: #fff; letter-spacing: 1px;">[ PHASE 02: DEPLOY MANAGEMENT CONSOLE ]</h2>
-        <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Download the v2.0 standalone console to begin hardware handshake.</p>
+        <p style="color: #666; font-size: 0.85rem;">Download the standalone console to begin hardware handshake.</p>
         
-        <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v1.8-alpha/dashboard.exe" class="download-btn">
+        <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v2.0-alpha/GhostSemi_Console.exe" class="download-btn">
             DOWNLOAD ALPHA v2.0 (.EXE)
         </a>
 
         <div class="specs">
-            BUILD: v2.0-STABLE | ARCH: X64 | OS: WIN_10_11 | HWID_AUTH: ENABLED
+            BUILD: v2.0-STABLE | ARCH: X64 | OS: WIN_10_11<br>
+            <span class="hash-tag">SHA256: 117d1acc84ead139b41349ad21872375db5f46117158fbfd9f34816f1550564e</span>
         </div>
     </div>
 
@@ -69,48 +168,48 @@
 
     <script>
     function payWithPaystack() {
-        const emailInput = document.getElementById('userEmail');
-        const email = emailInput.value.trim();
-        
-        if(!email.includes('@') || email.length < 5) { 
-            alert("ACCESS DENIED: INVALID CREDENTIALS FORMAT"); 
+        const email = document.getElementById('userEmail').value.trim();
+        if(!email.includes('@')) { 
+            alert("ACCESS DENIED: INVALID EMAIL FORMAT"); 
             return; 
         }
 
         const handler = PaystackPop.setup({
             key: 'pk_test_ce6a9fd2968689000387bca6c60ee70e80708e39', 
             email: email,
-            amount: 130000, // 1,300 KES
+            amount: 130000, // 1,300 KES (in cents)
             currency: 'KES',
             callback: function(response) {
-                // Once paid, run the provisioning script
-                submitToGoogle(email, response.reference);
+                // Triggered upon successful transaction
+                provisionAlphaAccess(email, response.reference);
             },
             onClose: function() {
-                alert('TRANSACTION CANCELLED');
+                alert('HANDSHAKE TERMINATED: PAYMENT NOT DETECTED');
             }
         });
         handler.openIframe();
     }
 
-    function submitToGoogle(email, paystackRef) {
+    function provisionAlphaAccess(email, reference) {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwO9XXqeBFantsfPI1qTDUat_BYAt2bh5efzUEGR4IzA7wja8vcpB5d7JWGh7mpF8ZysQ/exec';
         const btn = document.getElementById('mainBtn');
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyDMjj_Kbe15-UVQTdiflYG4nFjD-wMV6n4Kbd-gePtpB4-dTUbn5l1kzFIz73HjA5CYg/exec';
-        btn.innerHTML = "ESTABLISHING HANDSHAKE...";
+        
+        btn.innerHTML = "PROVISIONING KEY...";
         btn.disabled = true;
 
         fetch(scriptURL, {
             method: 'POST',
-            mode: 'no-cors', 
+            mode: 'no-cors',
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                "email": email,
-                "paystack_ref": paystackRef,
+                "email": email, 
+                "paystack_ref": reference,
                 "auth_token": "SECRET_ALPHA_TOKEN_99" 
             })
         })
         .then(() => { 
+            console.log("Success: Redirecting to Provisioning Terminal");
             window.location.href = 'success.html'; 
         })
         .catch((error) => { 
