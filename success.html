@@ -28,8 +28,9 @@
         .key-label { font-size: 0.7rem; color: #555; text-transform: uppercase; margin-bottom: 10px; display: block; }
         .key-box { 
             background: #000; border: 1px solid var(--neon); padding: 20px; 
-            font-size: 1.4rem; color: white; display: inline-block; 
-            font-family: 'Orbitron', sans-serif; letter-spacing: 3px;
+            font-size: 1.1rem; color: white; display: inline-block; 
+            font-family: 'Orbitron', sans-serif; letter-spacing: 2px;
+            width: 90%;
         }
 
         .billing-card {
@@ -47,7 +48,7 @@
         }
         .dl-button:hover { background: white; transform: scale(1.05); box-shadow: 0 0 20px var(--neon); }
 
-        .footer-note { margin-top: 30px; color: #444; font-size: 0.7rem; }
+        .footer-note { margin-top: 30px; color: #444; font-size: 0.7rem; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -59,24 +60,27 @@
         <p class="subtitle">ALPHA ACCESS GRANTED // NODE_ID: GS-2026-X</p>
         
         <div class="key-section">
-            <span class="key-label">Your Unique Pro Key</span>
-            <div class="key-box">Check your email. Your unique Alpha Key has been provisioned.</div>
+            <span class="key-label">Access Credentials Dispatch</span>
+            <div class="key-box">
+                SUCCESS: UNIQUE ALPHA KEY DISPATCHED TO ENCRYPTED INBOX. CHECK YOUR EMAIL.
+            </div>
         </div>
 
         <div class="billing-card">
-            <div class="billing-row"><span>License Type:</span> <strong>Alpha Professional</strong></div>
+            <div class="billing-row"><span>License Type:</span> <strong>Alpha Professional (v2.0)</strong></div>
             <div class="billing-row"><span>Billing Cycle:</span> <strong>Trial (60 Days)</strong></div>
             <div class="billing-row"><span>Service Status:</span> <strong style="color: var(--success);">Operational</strong></div>
-            <div class="billing-row"><span>Provisioned To:</span> <strong>[Verified Member]</strong></div>
+            <div class="billing-row"><span>Provisioned To:</span> <strong>Verified Alpha Member</strong></div>
         </div>
 
         <div class="download-zone">
-            <p style="margin-bottom: 20px; font-size: 0.9rem; color: #888;">Download the stable binary package (v1.5) to begin deployment.</p>
-            <a href="https://github.com/GhostSemi/GhostSemi-Core/releases" class="dl-button">DOWNLOAD BINARIES</a>
+            <p style="margin-bottom: 20px; font-size: 0.9rem; color: #888;">Deploy the standalone binary package to finalize system handshake.</p>
+            <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v2.0-alpha/GhostSemi_Console.exe" class="dl-button">DEPLOY BINARY (.EXE)</a>
         </div>
 
         <div class="footer-note">
-            SECURE TRANSMISSION ENCRYPTED BY GHOSTSEMI CORE PROTOCOL V1.5
+            SHA256: 117d1acc84ead139b41349ad21872375db5f46117158fbfd9f34816f1550564e<br>
+            SECURE TRANSMISSION ENCRYPTED BY GHOSTSEMI CORE PROTOCOL V2.0
         </div>
     </div>
 
