@@ -13,6 +13,9 @@ import sys
 import subprocess
 import psutil
 import hashlib
+import webbrowser
+import smtplib
+from email.message import EmailMessage
 from datetime import datetime, timedelta
 
 # --- CORE SECURITY: HARDWARE ID & ENCRYPTION ---
@@ -33,17 +36,18 @@ def generate_secure_token(hwid):
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-# v2.5 INFRASTRUCTURE
+# v2.6 INFRASTRUCTURE
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRxluW8fJg1oJD1G8CTc47JuaKFrfKRW7cxVEOKUhoH5z1oxiq80XcHUGDZ5kkNuIfmfEIexGdaJxg/pub?output=csv"
 SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbw79KJZvcdIVMmEpzSif9xzbhdCXS4QoscA7zkyCiuaU3vrwy6H4n3Tfhz-CDLnlFF0Ug/exec"
+GITHUB_RELEASE_URL = "https://github.com/YOUR_USERNAME/GhostSemi-Core/releases/latest"
 
 class GhostDashboard(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         # --- WINDOW CONFIG ---
-        self.title("GhostSemi | Command Console v2.5")
-        self.geometry("500x820") 
+        self.title("GhostSemi | Command Console v2.6")
+        self.geometry("500x880") # Increased height for new buttons
         self.protocol('WM_DELETE_WINDOW', self.hide_to_tray)
         
         self.is_pro = False
@@ -54,7 +58,7 @@ class GhostDashboard(ctk.CTk):
         # --- HEADER ---
         self.header = ctk.CTkLabel(self, text="GHOSTSEMI CORE", font=("Orbitron", 28, "bold"), text_color="#00d4ff")
         self.header.pack(pady=(25, 5))
-        self.version_label = ctk.CTkLabel(self, text="SILICON INFRASTRUCTURE v2.5", font=("Courier", 10), text_color="#555")
+        self.version_label = ctk.CTkLabel(self, text="SILICON INFRASTRUCTURE v2.6", font=("Courier", 10), text_color="#555")
         self.version_label.pack()
 
         # --- PULSE: LIVE TELEMETRY ---
@@ -70,6 +74,10 @@ class GhostDashboard(ctk.CTk):
 
         self.status_label = ctk.CTkLabel(self, text="STATUS: INITIALIZING...", font=("Roboto", 14))
         self.status_label.pack(pady=10)
+
+        # Admin Requirement Note
+        self.admin_note = ctk.CTkLabel(self, text="⚠ NOTE: Run as Administrator for full telemetry", font=("Roboto", 10), text_color="#d35400")
+        self.admin_note.pack()
 
         self.progress_bar = ctk.CTkProgressBar(self, width=400, height=12)
         self.progress_bar.set(0.2) 
@@ -88,6 +96,10 @@ class GhostDashboard(ctk.CTk):
         self.upgrade_button = ctk.CTkButton(self.license_frame, text="VERIFY & ACTIVATE", font=("Orbitron", 14, "bold"), height=45, command=self.start_verification)
         self.upgrade_button.pack(pady=(15, 10))
 
+        # --- DEPLOYMENT BUTTON (UPDATED v2.6) ---
+        self.deploy_button = ctk.CTkButton(self, text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", font=("Roboto", 12, "bold"), fg_color="#1a1a1a", border_width=1, border_color="#00d4ff", height=40, command=lambda: webbrowser.open(GITHUB_RELEASE_URL))
+        self.deploy_button.pack(pady=5)
+
         # --- TRIAL MODE BUTTON ---
         self.trial_button = ctk.CTkButton(self.license_frame, text="START 24H ALPHA TRIAL", fg_color="transparent", border_width=1, font=("Roboto", 11), command=self.activate_trial)
         self.trial_button.pack(pady=(0, 20))
@@ -100,12 +112,66 @@ class GhostDashboard(ctk.CTk):
         self.renew_btn = ctk.CTkButton(self.portal_frame, text="EXTEND LICENSE", font=("Roboto", 10), fg_color="#1B4D3E", width=120, height=28, command=lambda: subprocess.run(["start", "https://ghostsemi-overdrive.github.io/GhostSemi-Core/"], shell=True))
         self.renew_btn.grid(row=0, column=1, padx=5)
 
+        # --- ADMIN MAILER ACCESS (HIDDEN) ---
+        self.admin_access_btn = ctk.CTkButton(self, text="ADMIN ACCESS", font=("Roboto", 9), fg_color="transparent", text_color="#222", width=80, command=self.open_admin_mailer)
+        self.admin_access_btn.pack(side="bottom", pady=5)
+
         self.broadcast_label = ctk.CTkLabel(self, text="[HQ]: STANDBY FOR HANDSHAKE", font=("Courier", 9), text_color="#444")
         self.broadcast_label.pack(pady=10)
 
         # Start background threads
         self.update_telemetry()
         self.check_persistence()
+
+    # --- ADMIN MAILER INTEGRATION ---
+    def open_admin_mailer(self):
+        admin_win = ctk.CTkToplevel(self)
+        admin_win.title("GhostSemi | Admin Dispatch")
+        admin_win.geometry("400x300")
+        
+        ctk.CTkLabel(admin_win, text="DISPATCH LICENSE KEY", font=("Orbitron", 16)).pack(pady=10)
+        target_email = ctk.CTkEntry(admin_win, placeholder_text="Customer Email", width=250)
+        target_email.pack(pady=5)
+        new_key = ctk.CTkEntry(admin_win, placeholder_text="Generated Key", width=250)
+        new_key.pack(pady=5)
+        
+        def dispatch():
+            e, k = target_email.get(), new_key.get()
+            if e and k:
+                threading.Thread(target=self.send_license_email, args=(e, k), daemon=True).start()
+                admin_win.destroy()
+            else:
+                messagebox.showerror("Error", "Fields cannot be empty")
+
+        ctk.CTkButton(admin_win, text="SEND KEY VIA SMTP", command=dispatch).pack(pady=20)
+
+    def send_license_email(self, customer_email, license_key):
+        msg = EmailMessage()
+        msg.set_content(f"""
+Hello,
+
+Welcome to GhostSemi Silicon Infrastructure. Your access key is ready.
+
+YOUR KEY: {license_key}
+
+1. DOWNLOAD SETUP: {GITHUB_RELEASE_URL}
+2. INSTALL: Run GhostSemi_Setup_v2.6.exe
+3. IMPORTANT: Right-click the desktop icon and 'Run as Administrator'.
+
+Stay Overclocked,
+GhostSemi Silicon HQ
+        """)
+        msg['Subject'] = "🛡️ Your GhostSemi Access: License Key & Setup"
+        msg['From'] = "YOUR_GMAIL@gmail.com" # Replace with your email
+        msg['To'] = customer_email
+
+        try:
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login('YOUR_GMAIL@gmail.com', 'YOUR_APP_PASSWORD') # Replace with App Password
+                smtp.send_message(msg)
+            self.after(0, lambda: messagebox.showinfo("Success", "License dispatched to customer."))
+        except Exception as e:
+            self.after(0, lambda: messagebox.showerror("Mail Error", f"Failed: {str(e)}"))
 
     def update_telemetry(self):
         try:
@@ -138,7 +204,6 @@ class GhostDashboard(ctk.CTk):
         if os.path.exists("pro_mode.txt"):
             with open("pro_mode.txt", "r") as f:
                 if f.read().strip() == generate_secure_token(self.current_hwid):
-                    # Attempt silent background cloud check to verify 60-day expiry
                     threading.Thread(target=self.cloud_handshake, args=("", "", True), daemon=True).start()
                     return
         self.reset_to_eval()
@@ -163,12 +228,9 @@ class GhostDashboard(ctk.CTk):
         try:
             resp = requests.get(SHEET_CSV_URL, timeout=12)
             df = pd.read_csv(io.StringIO(resp.text))
-            
-            # Match by HWID if auto-loading, otherwise by email/key
             user = df[df['HWID'] == self.current_hwid] if is_auto else df[(df['Email'] == email) & (df['Key'] == key)]
 
             if not user.empty:
-                # 1. AUTO-EXPIRY CHECK (60 DAYS)
                 p_date = pd.to_datetime(user.iloc[0]['Timestamp'])
                 days_used = (pd.Timestamp.now() - p_date).days
                 if days_used > 60:
@@ -177,7 +239,6 @@ class GhostDashboard(ctk.CTk):
                     self.after(0, self.reset_to_eval)
                     return
 
-                # 2. HWID BINDING CHECK
                 existing_hwid = str(user.iloc[0]['HWID']).strip()
                 if existing_hwid in ["nan", "", self.current_hwid]:
                     if existing_hwid in ["nan", ""]:
@@ -220,7 +281,7 @@ class GhostDashboard(ctk.CTk):
         self.withdraw()
         image = Image.new('RGB', (64, 64), color=(0, 212, 255))
         menu = (item('Open Console', self.show_window), item('Exit', self.destroy))
-        self.icon_manager = pystray.Icon("GhostSemi", image, "GhostSemi v2.5", menu)
+        self.icon_manager = pystray.Icon("GhostSemi", image, "GhostSemi v2.6", menu)
         threading.Thread(target=self.icon_manager.run, daemon=True).start()
 
     def show_window(self):
