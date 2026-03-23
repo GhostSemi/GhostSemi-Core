@@ -47,7 +47,7 @@ class GhostDashboard(ctk.CTk):
 
         # --- WINDOW CONFIG ---
         self.title("GhostSemi | Command Console v2.6")
-        self.geometry("500x880") # Increased height for new buttons
+        self.geometry("500x880") 
         self.protocol('WM_DELETE_WINDOW', self.hide_to_tray)
         
         self.is_pro = False
@@ -76,8 +76,8 @@ class GhostDashboard(ctk.CTk):
         self.status_label.pack(pady=10)
 
         # Admin Requirement Note
-        self.admin_note = ctk.CTkLabel(self, text="⚠ NOTE: Run as Administrator for full telemetry", font=("Roboto", 10), text_color="#d35400")
-        self.admin_note.pack()
+        self.admin_note_status = ctk.CTkLabel(self, text="⚠ NOTE: Run as Administrator for full telemetry", font=("Roboto", 10), text_color="#d35400")
+        self.admin_note_status.pack()
 
         self.progress_bar = ctk.CTkProgressBar(self, width=400, height=12)
         self.progress_bar.set(0.2) 
@@ -96,8 +96,17 @@ class GhostDashboard(ctk.CTk):
         self.upgrade_button = ctk.CTkButton(self.license_frame, text="VERIFY & ACTIVATE", font=("Orbitron", 14, "bold"), height=45, command=self.start_verification)
         self.upgrade_button.pack(pady=(15, 10))
 
-        # --- DEPLOYMENT BUTTON (UPDATED v2.6) ---
-        self.deploy_button = ctk.CTkButton(self, text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", font=("Roboto", 12, "bold"), fg_color="#1a1a1a", border_width=1, border_color="#00d4ff", height=40, command=lambda: webbrowser.open(GITHUB_RELEASE_URL))
+        # --- UPDATED v2.6 DEPLOYMENT SECTION ---
+        self.deploy_button = ctk.CTkButton(
+            self, 
+            text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", 
+            font=("Roboto", 12, "bold"), 
+            fg_color="#1a1a1a", 
+            border_width=1, 
+            border_color="#00d4ff", 
+            height=40, 
+            command=lambda: webbrowser.open(GITHUB_RELEASE_URL)
+        )
         self.deploy_button.pack(pady=5)
 
         # --- TRIAL MODE BUTTON ---
@@ -123,7 +132,6 @@ class GhostDashboard(ctk.CTk):
         self.update_telemetry()
         self.check_persistence()
 
-    # --- ADMIN MAILER INTEGRATION ---
     def open_admin_mailer(self):
         admin_win = ctk.CTkToplevel(self)
         admin_win.title("GhostSemi | Admin Dispatch")
@@ -162,14 +170,14 @@ Stay Overclocked,
 GhostSemi Silicon HQ
         """)
         msg['Subject'] = "🛡️ Your GhostSemi Access: License Key & Setup"
-        msg['From'] = "YOUR_GMAIL@gmail.com" # Replace with your email
+        msg['From'] = "YOUR_GMAIL@gmail.com"
         msg['To'] = customer_email
 
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login('YOUR_GMAIL@gmail.com', 'YOUR_APP_PASSWORD') # Replace with App Password
+                smtp.login('YOUR_GMAIL@gmail.com', 'YOUR_APP_PASSWORD')
                 smtp.send_message(msg)
-            self.after(0, lambda: messagebox.showinfo("Success", "License dispatched to customer."))
+            self.after(0, lambda: messagebox.showinfo("Success", "License dispatched."))
         except Exception as e:
             self.after(0, lambda: messagebox.showerror("Mail Error", f"Failed: {str(e)}"))
 
@@ -190,7 +198,7 @@ GhostSemi Silicon HQ
             with open(trial_file, "r") as f:
                 start_date = datetime.fromisoformat(f.read().strip())
                 if datetime.now() > start_date + timedelta(hours=24):
-                    messagebox.showerror("GhostSemi", "Alpha Trial Expired. Key Required.")
+                    messagebox.showerror("GhostSemi", "Alpha Trial Expired.")
                     return
             self.is_trial = True
             self.unlock_ui(days_left="TRIAL ACTIVE")
@@ -234,7 +242,7 @@ GhostSemi Silicon HQ
                 p_date = pd.to_datetime(user.iloc[0]['Timestamp'])
                 days_used = (pd.Timestamp.now() - p_date).days
                 if days_used > 60:
-                    self.after(0, lambda: messagebox.showerror("Expired", "License Expired. Renew at HQ."))
+                    self.after(0, lambda: messagebox.showerror("Expired", "License Expired."))
                     if os.path.exists("pro_mode.txt"): os.remove("pro_mode.txt")
                     self.after(0, self.reset_to_eval)
                     return
@@ -243,11 +251,10 @@ GhostSemi Silicon HQ
                 if existing_hwid in ["nan", "", self.current_hwid]:
                     if existing_hwid in ["nan", ""]:
                         requests.post(SCRIPT_API_URL, json={"action":"register_hwid","email":user.iloc[0]['Email'],"hwid":self.current_hwid,"auth_token":"SECRET_ALPHA_TOKEN_99"})
-                    
                     self.after(0, lambda: self.unlock_ui(60 - days_used))
                     with open("pro_mode.txt", "w") as f: f.write(generate_secure_token(self.current_hwid))
                 else:
-                    self.after(0, lambda: messagebox.showerror("Lock", "Hardware Mismatch. Unbind first."))
+                    self.after(0, lambda: messagebox.showerror("Lock", "Hardware Mismatch."))
                     self.after(0, self.reset_to_eval)
             else:
                 self.after(0, self.reset_to_eval)
@@ -268,7 +275,7 @@ GhostSemi Silicon HQ
         if not email:
             messagebox.showwarning("GhostSemi", "Enter registered email.")
             return
-        if messagebox.askyesno("Portal", "Unbind this device?"):
+        if messagebox.askyesno("Portal", "Unbind device?"):
             try:
                 resp = requests.post(SCRIPT_API_URL, json={"action":"reset_hwid","email":email,"auth_token":"SECRET_ALPHA_TOKEN_99"})
                 if "RESET_SUCCESS" in resp.text:
