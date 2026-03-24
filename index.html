@@ -154,13 +154,13 @@
         <h2 style="font-family: 'Orbitron'; font-size: 0.9rem; color: #fff; letter-spacing: 1px;">[ PHASE 02: DEPLOY MANAGEMENT CONSOLE ]</h2>
         <p style="color: #666; font-size: 0.85rem;">Download the standalone console to begin hardware handshake.</p>
         
-        <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v2.6-Stable/GhostSemi_Console.exe" class="download-btn">
+        <a href="https://github.com/GhostSemi/GhostSemi-Core/releases/download/v2.6-Stable/GhostSemi_Setup_v2.6.exe" class="download-btn">
             DOWNLOAD ALPHA v2.6 (.EXE)
         </a>
 
         <div class="specs">
             BUILD: v2.6-STABLE | ARCH: X64 | OS: WIN_10_11<br>
-            <span class="hash-tag">SHA256: [40889C723C4351EB61...]</span>
+            <span class="hash-tag">SHA256: dfa8401e0fc224747c18d878aa9900aca4670ca456a6cd422eb6545258b8194e</span>
         </div>
     </div>
 
@@ -177,7 +177,7 @@
         const handler = PaystackPop.setup({
             key: 'pk_test_ce6a9fd2968689000387bca6c60ee70e80708e39', 
             email: email,
-            amount: 130000, // 1,300 KES (in cents)
+            amount: 130000, 
             currency: 'KES',
             callback: function(response) {
                 provisionAlphaAccess(email, response.reference);
