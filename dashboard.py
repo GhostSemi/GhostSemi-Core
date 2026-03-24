@@ -45,7 +45,7 @@ class GhostDashboard(ctk.CTk):
         super().__init__()
 
         # --- WINDOW CONFIG ---
-        self.title("GhostSemi | Command Console v2.6-stable")
+        self.title("GhostSemi | Command Console v2.6-Stable")
         self.geometry("500x880") 
         self.protocol('WM_DELETE_WINDOW', self.hide_to_tray)
         
@@ -97,7 +97,7 @@ class GhostDashboard(ctk.CTk):
         # --- DEPLOYMENT SECTION ---
         self.deploy_button = ctk.CTkButton(
             self, 
-            text="DOWNLOAD GHOSTSEMI SETUP (v2.6-stable)", 
+            text="DOWNLOAD GHOSTSEMI SETUP (v2.6-Stable)", 
             font=("Roboto", 12, "bold"), 
             fg_color="#1a1a1a", 
             border_width=1, 
@@ -136,7 +136,7 @@ class GhostDashboard(ctk.CTk):
         security_win.attributes("-topmost", True)
 
         ctk.CTkLabel(security_win, text="PROVISIONING COMPLETE", font=("Orbitron", 18, "bold"), text_color="#00d4ff").pack(pady=(20, 5))
-        ctk.CTkLabel(security_win, text="ALPHA ACCESS GRANTED // CORE v2.6", font=("Courier", 10), text_color="#555").pack()
+        ctk.CTkLabel(security_win, text="ALPHA ACCESS GRANTED // CORE v2.6-Stable", font=("Courier", 10), text_color="#555").pack()
 
         proc_frame = ctk.CTkFrame(security_win, fg_color="#0a0a0c", border_width=1, border_color="#1a1a1a")
         proc_frame.pack(pady=20, padx=30, fill="both", expand=True)
