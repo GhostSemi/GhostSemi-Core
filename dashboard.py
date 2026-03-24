@@ -45,7 +45,7 @@ class GhostDashboard(ctk.CTk):
         super().__init__()
 
         # --- WINDOW CONFIG ---
-        self.title("GhostSemi | Command Console v2.6")
+        self.title("GhostSemi | Command Console v2.6-stable")
         self.geometry("500x880") 
         self.protocol('WM_DELETE_WINDOW', self.hide_to_tray)
         
@@ -97,7 +97,7 @@ class GhostDashboard(ctk.CTk):
         # --- DEPLOYMENT SECTION ---
         self.deploy_button = ctk.CTkButton(
             self, 
-            text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", 
+            text="DOWNLOAD GHOSTSEMI SETUP (v2.6-stable)", 
             font=("Roboto", 12, "bold"), 
             fg_color="#1a1a1a", 
             border_width=1, 
