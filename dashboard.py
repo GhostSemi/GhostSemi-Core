@@ -2,7 +2,6 @@ import customtkinter as ctk
 from tkinter import messagebox
 from PIL import Image
 import os
-import winsound
 import threading
 import pystray
 from pystray import MenuItem as item
@@ -36,10 +35,10 @@ def generate_secure_token(hwid):
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-# v2.6 INFRASTRUCTURE
+# --- v2.6 LIVE CONFIGURATION ---
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRxluW8fJg1oJD1G8CTc47JuaKFrfKRW7cxVEOKUhoH5z1oxiq80XcHUGDZ5kkNuIfmfEIexGdaJxg/pub?output=csv"
 SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbw79KJZvcdIVMmEpzSif9xzbhdCXS4QoscA7zkyCiuaU3vrwy6H4n3Tfhz-CDLnlFF0Ug/exec"
-GITHUB_RELEASE_URL = "https://github.com/YOUR_USERNAME/GhostSemi-Core/releases/latest"
+GITHUB_RELEASE_URL = "https://github.com/GhostSemi/GhostSemi-Core/releases/latest"
 
 class GhostDashboard(ctk.CTk):
     def __init__(self):
@@ -75,7 +74,6 @@ class GhostDashboard(ctk.CTk):
         self.status_label = ctk.CTkLabel(self, text="STATUS: INITIALIZING...", font=("Roboto", 14))
         self.status_label.pack(pady=10)
 
-        # Admin Requirement Note
         self.admin_note_status = ctk.CTkLabel(self, text="⚠ NOTE: Run as Administrator for full telemetry", font=("Roboto", 10), text_color="#d35400")
         self.admin_note_status.pack()
 
@@ -96,7 +94,7 @@ class GhostDashboard(ctk.CTk):
         self.upgrade_button = ctk.CTkButton(self.license_frame, text="VERIFY & ACTIVATE", font=("Orbitron", 14, "bold"), height=45, command=self.start_verification)
         self.upgrade_button.pack(pady=(15, 10))
 
-        # --- UPDATED v2.6 DEPLOYMENT SECTION ---
+        # --- UPDATED DEPLOYMENT BUTTON ---
         self.deploy_button = ctk.CTkButton(
             self, 
             text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", 
@@ -109,7 +107,6 @@ class GhostDashboard(ctk.CTk):
         )
         self.deploy_button.pack(pady=5)
 
-        # --- TRIAL MODE BUTTON ---
         self.trial_button = ctk.CTkButton(self.license_frame, text="START 24H ALPHA TRIAL", fg_color="transparent", border_width=1, font=("Roboto", 11), command=self.activate_trial)
         self.trial_button.pack(pady=(0, 20))
 
@@ -118,7 +115,7 @@ class GhostDashboard(ctk.CTk):
         self.portal_frame.pack(pady=5)
         self.reset_hwid_btn = ctk.CTkButton(self.portal_frame, text="UNBIND DEVICE", font=("Roboto", 10), fg_color="#333", width=120, height=28, command=self.request_hwid_reset)
         self.reset_hwid_btn.grid(row=0, column=0, padx=5)
-        self.renew_btn = ctk.CTkButton(self.portal_frame, text="EXTEND LICENSE", font=("Roboto", 10), fg_color="#1B4D3E", width=120, height=28, command=lambda: subprocess.run(["start", "https://ghostsemi-overdrive.github.io/GhostSemi-Core/"], shell=True))
+        self.renew_btn = ctk.CTkButton(self.portal_frame, text="EXTEND LICENSE", font=("Roboto", 10), fg_color="#1B4D3E", width=120, height=28, command=lambda: webbrowser.open("https://ghostsemi-overdrive.github.io/GhostSemi-Core/"))
         self.renew_btn.grid(row=0, column=1, padx=5)
 
         # --- ADMIN MAILER ACCESS (HIDDEN) ---
@@ -128,7 +125,6 @@ class GhostDashboard(ctk.CTk):
         self.broadcast_label = ctk.CTkLabel(self, text="[HQ]: STANDBY FOR HANDSHAKE", font=("Courier", 9), text_color="#444")
         self.broadcast_label.pack(pady=10)
 
-        # Start background threads
         self.update_telemetry()
         self.check_persistence()
 
@@ -136,7 +132,6 @@ class GhostDashboard(ctk.CTk):
         admin_win = ctk.CTkToplevel(self)
         admin_win.title("GhostSemi | Admin Dispatch")
         admin_win.geometry("400x300")
-        
         ctk.CTkLabel(admin_win, text="DISPATCH LICENSE KEY", font=("Orbitron", 16)).pack(pady=10)
         target_email = ctk.CTkEntry(admin_win, placeholder_text="Customer Email", width=250)
         target_email.pack(pady=5)
@@ -148,34 +143,18 @@ class GhostDashboard(ctk.CTk):
             if e and k:
                 threading.Thread(target=self.send_license_email, args=(e, k), daemon=True).start()
                 admin_win.destroy()
-            else:
-                messagebox.showerror("Error", "Fields cannot be empty")
-
+            else: messagebox.showerror("Error", "Fields cannot be empty")
         ctk.CTkButton(admin_win, text="SEND KEY VIA SMTP", command=dispatch).pack(pady=20)
 
     def send_license_email(self, customer_email, license_key):
         msg = EmailMessage()
-        msg.set_content(f"""
-Hello,
-
-Welcome to GhostSemi Silicon Infrastructure. Your access key is ready.
-
-YOUR KEY: {license_key}
-
-1. DOWNLOAD SETUP: {GITHUB_RELEASE_URL}
-2. INSTALL: Run GhostSemi_Setup_v2.6.exe
-3. IMPORTANT: Right-click the desktop icon and 'Run as Administrator'.
-
-Stay Overclocked,
-GhostSemi Silicon HQ
-        """)
+        msg.set_content(f"Hello,\n\nWelcome to GhostSemi Silicon. Your access key is ready.\n\nYOUR KEY: {license_key}\n\n1. DOWNLOAD: {GITHUB_RELEASE_URL}\n2. INSTALL: Run GhostSemi_Setup_v2.6.exe\n3. IMPORTANT: Right-click and 'Run as Administrator'.\n\nStay Overclocked,\nGhostSemi Silicon HQ")
         msg['Subject'] = "🛡️ Your GhostSemi Access: License Key & Setup"
-        msg['From'] = "YOUR_GMAIL@gmail.com"
+        msg['From'] = "cliphomondi3@gmail.com"
         msg['To'] = customer_email
-
         try:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login('YOUR_GMAIL@gmail.com', 'YOUR_APP_PASSWORD')
+                smtp.login('cliphomondi3@gmail.com', 'tszu mjpy apmx kjuk')
                 smtp.send_message(msg)
             self.after(0, lambda: messagebox.showinfo("Success", "License dispatched."))
         except Exception as e:
@@ -237,7 +216,6 @@ GhostSemi Silicon HQ
             resp = requests.get(SHEET_CSV_URL, timeout=12)
             df = pd.read_csv(io.StringIO(resp.text))
             user = df[df['HWID'] == self.current_hwid] if is_auto else df[(df['Email'] == email) & (df['Key'] == key)]
-
             if not user.empty:
                 p_date = pd.to_datetime(user.iloc[0]['Timestamp'])
                 days_used = (pd.Timestamp.now() - p_date).days
@@ -246,7 +224,6 @@ GhostSemi Silicon HQ
                     if os.path.exists("pro_mode.txt"): os.remove("pro_mode.txt")
                     self.after(0, self.reset_to_eval)
                     return
-
                 existing_hwid = str(user.iloc[0]['HWID']).strip()
                 if existing_hwid in ["nan", "", self.current_hwid]:
                     if existing_hwid in ["nan", ""]:
@@ -256,10 +233,8 @@ GhostSemi Silicon HQ
                 else:
                     self.after(0, lambda: messagebox.showerror("Lock", "Hardware Mismatch."))
                     self.after(0, self.reset_to_eval)
-            else:
-                self.after(0, self.reset_to_eval)
-        except Exception:
-            self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
+            else: self.after(0, self.reset_to_eval)
+        except Exception: self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
 
     def unlock_ui(self, days_left):
         self.is_pro = True
@@ -273,7 +248,7 @@ GhostSemi Silicon HQ
     def request_hwid_reset(self):
         email = self.email_entry.get().strip()
         if not email:
-            messagebox.showwarning("GhostSemi", "Enter registered email.")
+            messagebox.showwarning("GhostSemi", "Enter email.")
             return
         if messagebox.askyesno("Portal", "Unbind device?"):
             try:
