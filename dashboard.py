@@ -94,7 +94,7 @@ class GhostDashboard(ctk.CTk):
         self.upgrade_button = ctk.CTkButton(self.license_frame, text="VERIFY & ACTIVATE", font=("Orbitron", 14, "bold"), height=45, command=self.start_verification)
         self.upgrade_button.pack(pady=(15, 10))
 
-        # --- UPDATED DEPLOYMENT BUTTON ---
+        # --- DEPLOYMENT SECTION ---
         self.deploy_button = ctk.CTkButton(
             self, 
             text="DOWNLOAD GHOSTSEMI SETUP (v2.6)", 
@@ -128,10 +128,45 @@ class GhostDashboard(ctk.CTk):
         self.update_telemetry()
         self.check_persistence()
 
+    # --- SECURITY INITIALIZATION PAGE (SMARTSCREEN BYPASS) ---
+    def open_security_initialization(self):
+        security_win = ctk.CTkToplevel(self)
+        security_win.title("PROVISIONING COMPLETE // SECURITY PROTOCOL")
+        security_win.geometry("550x680")
+        security_win.attributes("-topmost", True)
+
+        ctk.CTkLabel(security_win, text="PROVISIONING COMPLETE", font=("Orbitron", 18, "bold"), text_color="#00d4ff").pack(pady=(20, 5))
+        ctk.CTkLabel(security_win, text="ALPHA ACCESS GRANTED // CORE v2.6", font=("Courier", 10), text_color="#555").pack()
+
+        proc_frame = ctk.CTkFrame(security_win, fg_color="#0a0a0c", border_width=1, border_color="#1a1a1a")
+        proc_frame.pack(pady=20, padx=30, fill="both", expand=True)
+
+        instructions = [
+            ("01. UNBLOCK BINARY", "Right-Click the .exe > Properties > Check 'Unblock' > Apply."),
+            ("02. SMARTSCREEN BYPASS", "If Windows flags the file, select 'More Info' > 'Run Anyway'."),
+            ("03. AV EXCLUSION (RECOMMENDED)", "Move .exe to a dedicated folder. Windows Security > Exclusions > Add Folder."),
+            ("04. OBFUSCATION HANDSHAKE", "The console is hardware-encrypted. If Antivirus flags 'Behavioral Scanning', select 'Allow'.")
+        ]
+
+        for title, desc in instructions:
+            t_lbl = ctk.CTkLabel(proc_frame, text=title, font=("Roboto Mono", 12, "bold"), text_color="#d35400", anchor="w")
+            t_lbl.pack(fill="x", padx=20, pady=(15, 0))
+            d_lbl = ctk.CTkLabel(proc_frame, text=desc, font=("Roboto", 11), text_color="#888", wraplength=450, justify="left")
+            d_lbl.pack(fill="x", padx=20, pady=(0, 5))
+
+        footer_text = (
+            "License: Alpha Professional\n"
+            "Status: Operational\n"
+            "Auth: Hardware Locked (HWID)\n"
+            "SHA256: 117d1acc84ead139b41349ad21872375db5f46117158fbfd9f34816f1550564e"
+        )
+        ctk.CTkLabel(security_win, text=footer_text, font=("Courier", 9), text_color="#444", justify="left").pack(pady=10)
+        ctk.CTkButton(security_win, text="INITIALIZE SECURE TRANSMISSION", fg_color="#1B4D3E", command=security_win.destroy).pack(pady=15)
+
     def open_admin_mailer(self):
         admin_win = ctk.CTkToplevel(self)
         admin_win.title("GhostSemi | Admin Dispatch")
-        admin_win.geometry("400x300")
+        admin_win.geometry("400x350")
         ctk.CTkLabel(admin_win, text="DISPATCH LICENSE KEY", font=("Orbitron", 16)).pack(pady=10)
         target_email = ctk.CTkEntry(admin_win, placeholder_text="Customer Email", width=250)
         target_email.pack(pady=5)
@@ -180,11 +215,11 @@ class GhostDashboard(ctk.CTk):
                     messagebox.showerror("GhostSemi", "Alpha Trial Expired.")
                     return
             self.is_trial = True
-            self.unlock_ui(days_left="TRIAL ACTIVE")
+            self.unlock_ui("TRIAL ACTIVE")
         else:
             with open(trial_file, "w") as f: f.write(datetime.now().isoformat())
             self.is_trial = True
-            self.unlock_ui(days_left="24H TRIAL")
+            self.unlock_ui("24H TRIAL")
             messagebox.showinfo("GhostSemi", "24-Hour Alpha Trial Engaged.")
 
     def check_persistence(self):
@@ -243,7 +278,10 @@ class GhostDashboard(ctk.CTk):
         self.progress_bar.set(1.0)
         self.speed_label.configure(text="CLOCKS: 4.2 GHz (OVERRIDDEN)", text_color="#00d4ff")
         self.upgrade_button.configure(text="SYSTEM OPTIMIZED", state="disabled", fg_color="#1B4D3E")
-        self.broadcast_label.configure(text=f"[HQ]: {days_left} DAYS REMAINING", text_color="#00d4ff")
+        self.broadcast_label.configure(text=f"[HQ]: {days_left} REMAINING", text_color="#00d4ff")
+        
+        # TRIGGER THE SECURITY BYPASS GUIDE
+        self.after(1000, self.open_security_initialization)
 
     def request_hwid_reset(self):
         email = self.email_entry.get().strip()
