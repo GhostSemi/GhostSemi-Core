@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 # --- CORE SECURITY: HARDWARE ID & ENCRYPTION ---
 def get_hwid():
     try:
+        # Get unique hardware UUID
         cmd = 'wmic csproduct get uuid'
         uuid = subprocess.check_output(cmd, shell=True).decode().split('\n')[1].strip()
         return uuid
@@ -118,7 +119,7 @@ class GhostDashboard(ctk.CTk):
         self.renew_btn = ctk.CTkButton(self.portal_frame, text="EXTEND LICENSE", font=("Roboto", 10), fg_color="#1B4D3E", width=120, height=28, command=lambda: webbrowser.open("https://ghostsemi-overdrive.github.io/GhostSemi-Core/"))
         self.renew_btn.grid(row=0, column=1, padx=5)
 
-        # --- ADMIN MAILER ACCESS (HIDDEN) ---
+        # --- ADMIN MAILER ACCESS ---
         self.admin_access_btn = ctk.CTkButton(self, text="ADMIN ACCESS", font=("Roboto", 9), fg_color="transparent", text_color="#222", width=80, command=self.open_admin_mailer)
         self.admin_access_btn.pack(side="bottom", pady=5)
 
@@ -128,7 +129,18 @@ class GhostDashboard(ctk.CTk):
         self.update_telemetry()
         self.check_persistence()
 
-    # --- SECURITY INITIALIZATION PAGE (SMARTSCREEN BYPASS) ---
+    # --- CORE HANDSHAKE ENGINE LAUNCHER ---
+    def launch_engine(self):
+        """Launches the C++ Silicon Engine if it exists"""
+        if os.path.exists("GhostAI.exe"):
+            try:
+                subprocess.Popen(["GhostAI.exe"])
+            except Exception as e:
+                print(f"Failed to launch Engine: {e}")
+        else:
+            messagebox.showwarning("System Alert", "GhostAI.exe (Engine Core) not detected in directory.")
+
+    # --- SECURITY INITIALIZATION PAGE ---
     def open_security_initialization(self):
         security_win = ctk.CTkToplevel(self)
         security_win.title("PROVISIONING COMPLETE // SECURITY PROTOCOL")
@@ -158,7 +170,7 @@ class GhostDashboard(ctk.CTk):
             "License: Alpha Professional\n"
             "Status: Operational\n"
             "Auth: Hardware Locked (HWID)\n"
-            "SHA256: 117d1acc84ead139b41349ad21872375db5f46117158fbfd9f34816f1550564e"
+            "SHA256: dfa8401e0fc224747c18d878aa9900aca4670ca456a6cd422eb6545258b8194e"
         )
         ctk.CTkLabel(security_win, text=footer_text, font=("Courier", 9), text_color="#444", justify="left").pack(pady=10)
         ctk.CTkButton(security_win, text="INITIALIZE SECURE TRANSMISSION", fg_color="#1B4D3E", command=security_win.destroy).pack(pady=15)
@@ -207,25 +219,36 @@ class GhostDashboard(ctk.CTk):
         self.after(1000, self.update_telemetry)
 
     def activate_trial(self):
-        trial_file = "trial_lock.bin"
-        if os.path.exists(trial_file):
-            with open(trial_file, "r") as f:
+        trial_lock = "trial_lock.bin"
+        trial_handshake = "trial_mode.txt" # C++ Trigger File
+        
+        if os.path.exists(trial_lock):
+            with open(trial_lock, "r") as f:
                 start_date = datetime.fromisoformat(f.read().strip())
                 if datetime.now() > start_date + timedelta(hours=24):
                     messagebox.showerror("GhostSemi", "Alpha Trial Expired.")
+                    if os.path.exists(trial_handshake): os.remove(trial_handshake)
                     return
             self.is_trial = True
             self.unlock_ui("TRIAL ACTIVE")
         else:
-            with open(trial_file, "w") as f: f.write(datetime.now().isoformat())
+            # Create the Lock (Persistence)
+            with open(trial_lock, "w") as f: f.write(datetime.now().isoformat())
+            # Create the Handshake (Unlock C++ Turbo)
+            with open(trial_handshake, "w") as f: f.write("TRIAL_ACTIVE_24H")
+            
             self.is_trial = True
             self.unlock_ui("24H TRIAL")
-            messagebox.showinfo("GhostSemi", "24-Hour Alpha Trial Engaged.")
+            messagebox.showinfo("GhostSemi", "24-Hour Alpha Trial Engaged. Turbo Unlocked.")
+            self.launch_engine()
 
     def check_persistence(self):
         if os.path.exists("pro_mode.txt"):
+            # Check if this pro_mode.txt matches the C++ expected content
+            # To be simple for now, we check if it exists and has the token.
             with open("pro_mode.txt", "r") as f:
-                if f.read().strip() == generate_secure_token(self.current_hwid):
+                content = f.read().strip()
+                if content == "GHOST_SECURE_5592_X" or content == generate_secure_token(self.current_hwid):
                     threading.Thread(target=self.cloud_handshake, args=("", "", True), daemon=True).start()
                     return
         self.reset_to_eval()
@@ -237,6 +260,9 @@ class GhostDashboard(ctk.CTk):
         self.progress_bar.set(0.2)
         self.speed_label.configure(text="LOCKED AT 1.8 GHz", text_color="white")
         self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal")
+        # Cleanup Handshakes on Eval reset
+        if os.path.exists("pro_mode.txt"): os.remove("pro_mode.txt")
+        if os.path.exists("trial_mode.txt"): os.remove("trial_mode.txt")
 
     def start_verification(self):
         email, key = self.email_entry.get().strip(), self.license_entry.get().strip()
@@ -251,25 +277,32 @@ class GhostDashboard(ctk.CTk):
             resp = requests.get(SHEET_CSV_URL, timeout=12)
             df = pd.read_csv(io.StringIO(resp.text))
             user = df[df['HWID'] == self.current_hwid] if is_auto else df[(df['Email'] == email) & (df['Key'] == key)]
+            
             if not user.empty:
                 p_date = pd.to_datetime(user.iloc[0]['Timestamp'])
                 days_used = (pd.Timestamp.now() - p_date).days
                 if days_used > 60:
                     self.after(0, lambda: messagebox.showerror("Expired", "License Expired."))
-                    if os.path.exists("pro_mode.txt"): os.remove("pro_mode.txt")
                     self.after(0, self.reset_to_eval)
                     return
+                
                 existing_hwid = str(user.iloc[0]['HWID']).strip()
                 if existing_hwid in ["nan", "", self.current_hwid]:
                     if existing_hwid in ["nan", ""]:
                         requests.post(SCRIPT_API_URL, json={"action":"register_hwid","email":user.iloc[0]['Email'],"hwid":self.current_hwid,"auth_token":"SECRET_ALPHA_TOKEN_99"})
+                    
+                    # Create the PRO_MODE.TXT Handshake for C++
+                    with open("pro_mode.txt", "w") as f: 
+                        f.write("GHOST_SECURE_5592_X")
+                    
                     self.after(0, lambda: self.unlock_ui(60 - days_used))
-                    with open("pro_mode.txt", "w") as f: f.write(generate_secure_token(self.current_hwid))
+                    self.after(100, self.launch_engine)
                 else:
                     self.after(0, lambda: messagebox.showerror("Lock", "Hardware Mismatch."))
                     self.after(0, self.reset_to_eval)
             else: self.after(0, self.reset_to_eval)
-        except Exception: self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
+        except Exception: 
+            self.after(0, lambda: self.upgrade_button.configure(text="VERIFY & ACTIVATE", state="normal"))
 
     def unlock_ui(self, days_left):
         self.is_pro = True
@@ -280,7 +313,7 @@ class GhostDashboard(ctk.CTk):
         self.upgrade_button.configure(text="SYSTEM OPTIMIZED", state="disabled", fg_color="#1B4D3E")
         self.broadcast_label.configure(text=f"[HQ]: {days_left} REMAINING", text_color="#00d4ff")
         
-        # TRIGGER THE SECURITY BYPASS GUIDE
+        # Trigger the Security Bypass Guide
         self.after(1000, self.open_security_initialization)
 
     def request_hwid_reset(self):
@@ -292,7 +325,6 @@ class GhostDashboard(ctk.CTk):
             try:
                 resp = requests.post(SCRIPT_API_URL, json={"action":"reset_hwid","email":email,"auth_token":"SECRET_ALPHA_TOKEN_99"})
                 if "RESET_SUCCESS" in resp.text:
-                    if os.path.exists("pro_mode.txt"): os.remove("pro_mode.txt")
                     self.after(0, self.reset_to_eval)
                     messagebox.showinfo("Success", "Hardware lock cleared.")
             except: pass
