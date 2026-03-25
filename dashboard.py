@@ -170,7 +170,7 @@ class GhostDashboard(ctk.CTk):
             "License: Alpha Professional\n"
             "Status: Operational\n"
             "Auth: Hardware Locked (HWID)\n"
-            "SHA256: dfa8401e0fc224747c18d878aa9900aca4670ca456a6cd422eb6545258b8194e"
+            "sha256:d04dd00675fd8bb9dacc58db25fa4b7c32acf6a65f1426fb5b068957ea9e00ff"
         )
         ctk.CTkLabel(security_win, text=footer_text, font=("Courier", 9), text_color="#444", justify="left").pack(pady=10)
         ctk.CTkButton(security_win, text="INITIALIZE SECURE TRANSMISSION", fg_color="#1B4D3E", command=security_win.destroy).pack(pady=15)
